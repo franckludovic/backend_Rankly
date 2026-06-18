@@ -1,0 +1,6 @@
+2026-06-16 23:26:21,252 [main] INFO - Starting SEO Suggestion Engine API...
+2026-06-16 23:26:21,253 [models.model_registry] INFO - Loading models...
+2026-06-16 23:26:31,044 [models.model_registry] INFO - ✓ Classification model loaded: xgb_classifier_V6.joblib
+2026-06-16 23:26:31,072 [models.model_registry] INFO - ✓ Regression model loaded: xgb_regressorV6.joblib
+2026-06-16 23:26:31,096 [models.model_registry] INFO - Models ready — clf_features=51  reg_features=97
+2026-06-16 23:26:31,098 [main] INFO - API ready

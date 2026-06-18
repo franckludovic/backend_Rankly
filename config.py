@@ -15,11 +15,12 @@ MODELS_DIR = BASE_DIR / "models"
 # ── Model paths — SWAP THESE when you get better models ──────────
 # Just replace the .joblib files in the models/ folder
 # and restart the server. Nothing else needs to change.
-CLF_MODEL_PATH      = MODELS_DIR / "xgb_classifier.joblib"
-REG_MODEL_PATH      = MODELS_DIR / "xgb_regressor.joblib"
-LABEL_ENCODER_PATH  = MODELS_DIR / "label_encoder.joblib"
-CLF_FEATURES_PATH   = MODELS_DIR / "clf_feature_cols.joblib"
-REG_FEATURES_PATH   = MODELS_DIR / "reg_feature_cols.joblib"
+CLF_MODEL_PATH      = MODELS_DIR / "xgb_classifier_V6.joblib"
+REG_MODEL_PATH      = MODELS_DIR / "xgb_regressorV6.joblib"
+LABEL_ENCODER_PATH  = MODELS_DIR / "label_encoder_V6.joblib"
+CLF_FEATURES_PATH   = MODELS_DIR / "clf_feature_cols_V6.joblib"
+REG_FEATURES_PATH   = MODELS_DIR / "reg_feature_colsV6.joblib"
+SEMANTIC_MODEL_PATH = MODELS_DIR / "semantic_model"          # all-MiniLM-L6-v2
 
 # ── API Keys ──────────────────────────────────────────────────────
 LIGHTHOUSE_API_KEY  = os.getenv("LIGHTHOUSE_API_KEY", "YOUR_KEY_HERE")

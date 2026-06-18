@@ -20,6 +20,8 @@ ENV/
 .DS_Store
 Thumbs.db
 
+models/semantic_model
+
 # Machine Learning Models
 models/*.joblib
 models/*.onnx
