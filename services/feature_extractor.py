@@ -292,30 +292,32 @@ def extract_features_from_html(html: str, url: str, keyword: str) -> dict:
     # Falls back to tfidf_relevance if the semantic model is unavailable.
     semantic_relevance = compute_semantic_relevance(kw, clean_text, tfidf_relevance)
 
-    # ── Off-page / authority features (filled later or defaulted) ─
-    # These are populated by external_apis.py after scraping.
-    # Common Crawl signals are not fetched at runtime — default to 0
-    # (the model was trained to handle 0-imputation for these).
+    # ── Off-page / authority features ────────────────────────────────
+    # These are populated AFTER scraping by the route handler:
+    #   - opr_* : from fetch_all_external_signals() / fetch_opr_score()
+    #   - cc_*  : from cc_graph.fetch_cc_signals() (SQLite lookup or CDX fallback)
+    # All default to 0 here; the route handler overwrites them.
     opr_page_rank    = 0.0
     opr_rank_log     = 0.0
     opr_domain_found = 0
 
     # domain_frequency is not computable at single-URL inference time
     domain_frequency     = 0
-    domain_frequency_log = 0.0   # log1p(domain_frequency) — already 0
+    domain_frequency_log = 0.0   # log1p(domain_frequency) — stays 0 at inference
 
-    # Common Crawl graph signals (off-page, not fetched live)
+    # Common Crawl graph signals — filled by cc_graph.fetch_cc_signals()
+    # after extract_features_from_html() returns.  Defaults here are overwritten.
     cc_pagerank              = 0.0
     cc_harmonic_centrality   = 0.0
     cc_referring_domains_log = 0.0
     cc_found                 = 0
 
-    # Derived authority ratios (will be near 0 when cc_pagerank=0)
-    _auth_denom = cc_pagerank + 1e-9
-    relevance_to_authority_ratio = round(tfidf_relevance / _auth_denom, 6)
-    semantic_to_authority_ratio  = round(semantic_relevance / _auth_denom, 6)
+    # Authority ratios — recomputed in predictor._enrich_with_external()
+    # once cc_pagerank is known. Placeholder 0 here.
+    relevance_to_authority_ratio = 0.0
+    semantic_to_authority_ratio  = 0.0
 
-    # Keyword competition / SERP signals (not available at inference)
+    # Keyword competition / SERP signals (not available from HTML alone)
     keyword_competition  = 0.0
     keyword_avg_position = 0.0
     keyword_position_std = 0.0

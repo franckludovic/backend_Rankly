@@ -14,6 +14,7 @@ POST /admin/reload-models     — Hot-reload models without restarting (requires
 """
 
 import logging
+import statistics
 from fastapi import APIRouter, HTTPException, Header, Request
 from pydantic import BaseModel, HttpUrl
 from typing import Optional
@@ -24,6 +25,7 @@ from services.feature_extractor import extract_features_from_url, extract_featur
 from services.external_apis import fetch_all_external_signals
 from services.predictor import predict
 from services.recommender import generate_recommendations
+from services.serp_competitor import run_competitor_pipeline, compute_query_relative_features
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -164,6 +166,38 @@ async def analyse_url(body: UrlRequest):
     except Exception as e:
         logger.warning(f"External APIs failed: {e}")
         external = {}
+
+    # ── 2b. SERP competitor pipeline (query-relative z-score/pct) ─
+    try:
+        competitors = await run_competitor_pipeline(keyword, target_url=url)
+
+        # Target values for comparison should include already-fetched external signals
+        target_for_query = dict(features)
+        target_for_query["lighthouse_seo_score"]      = external.get("lighthouse_score", -1)
+        target_for_query["opr_page_rank"]             = external.get("opr_page_rank", 0.0)
+        target_for_query["opr_rank_log"]              = external.get("opr_rank_log", 0.0)
+        target_for_query["cc_pagerank"]               = external.get("cc_pagerank", 0.0)
+        target_for_query["cc_harmonic_centrality"]    = external.get("cc_harmonic_centrality", 0.0)
+        target_for_query["cc_referring_domains_log"]  = external.get("cc_referring_domains_log", 0.0)
+
+        features.update(compute_query_relative_features(target_for_query, competitors))
+
+        # Keep competition summary fields consistent with available competitor pool
+        competitor_count = len(competitors)
+        features["keyword_competition"] = round(float(competitor_count), 4)
+        if competitor_count > 0:
+            positions = list(range(1, competitor_count + 1))
+            features["keyword_avg_position"] = round(sum(positions) / competitor_count, 4)
+            features["keyword_position_std"] = round(
+                statistics.pstdev(positions) if competitor_count > 1 else 0.0,
+                6,
+            )
+        else:
+            features["keyword_avg_position"] = 0.0
+            features["keyword_position_std"] = 0.0
+
+    except Exception as e:
+        logger.warning(f"SERP competitor pipeline failed: {e}")
 
     # ── 3. Predict ─────────────────────────────────────────────────
     try:

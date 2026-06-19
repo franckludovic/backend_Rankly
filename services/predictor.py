@@ -96,13 +96,24 @@ def _enrich_with_external(features: dict, external: dict) -> dict:
     features["opr_rank_log"]     = external.get("opr_rank_log", 0)
     features["opr_domain_found"] = external.get("opr_domain_found", 0)
 
+    # Common Crawl graph
+    features["cc_found"]                 = external.get("cc_found", features.get("cc_found", 0))
+    features["cc_pagerank"]              = external.get("cc_pagerank", features.get("cc_pagerank", 0.0))
+    features["cc_harmonic_centrality"]   = external.get(
+        "cc_harmonic_centrality",
+        features.get("cc_harmonic_centrality", 0.0),
+    )
+    features["cc_referring_domains_log"] = external.get(
+        "cc_referring_domains_log",
+        features.get("cc_referring_domains_log", 0.0),
+    )
+
     # Recompute authority ratios now that OPR / CC values may have changed.
-    # cc_pagerank stays 0 at inference (no live CC fetch), so the denom is tiny.
-    # We cap the ratio to prevent exploding values.
-    cc_pr = features.get("cc_pagerank", 0.0)
+    # If cc_pagerank is unavailable (0), use a tiny floor and cap the result.
+    cc_pr = max(float(features.get("cc_pagerank", 0.0)), 1e-9)
     tfidf = features.get("tfidf_relevance", 0.0)
     sem   = features.get("semantic_relevance", 0.0)
-    denom = cc_pr + 1e-9
+    denom = cc_pr
     features["relevance_to_authority_ratio"] = round(
         min(tfidf / denom, 1e6), 6
     )
