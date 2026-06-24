@@ -5,12 +5,12 @@ FastAPI routes for the SEO Suggestion Engine.
 
 Endpoints
 ---------
-GET  /health                  — Server health + model status
-GET  /models/status           — Detailed model registry info
-POST /analyse/url             — Full pipeline: scrape → extract → external APIs → predict → recommend
-POST /analyse/html            — HTML analysis (browser extension raw-HTML mode)
-POST /analyse/features        — Features-only analysis (extension pre-extraction mode)
-POST /admin/reload-models     — Hot-reload models without restarting (requires secret header)
+GET  /health                 - Server health + model status
+GET  /models/status          - Detailed model registry info
+POST /analyse/url            - Full pipeline: scrape → extract → external APIs → predict → recommend
+POST /analyse/html           - HTML analysis (browser extension raw-HTML mode)
+POST /analyse/features       - Features-only analysis (extension pre-extraction mode)
+POST /admin/reload-models    - Hot-reload models without restarting (requires secret header)
 """
 
 import logging
@@ -64,7 +64,7 @@ class HtmlRequest(BaseModel):
 class FeaturesRequest(BaseModel):
     """
     Accept a pre-extracted feature dict directly from the browser extension.
-    All fields are optional — missing ones default to 0 inside the predictor.
+    All fields are optional- missing ones default to 0 inside the predictor.
     """
     keyword: str
     url: Optional[str] = ""
@@ -169,7 +169,7 @@ async def analyse_url(body: UrlRequest):
 
     # ── 2b. SERP competitor pipeline (query-relative z-score/pct) ─
     try:
-        competitors = await run_competitor_pipeline(keyword, target_url=url)
+        competitors, _ = await run_competitor_pipeline(keyword, target_url=url)
 
         # Target values for comparison should include already-fetched external signals
         target_for_query = dict(features)
@@ -214,7 +214,7 @@ async def analyse_html(body: HtmlRequest):
     """
     Analyse raw HTML (for browser extension or local file testing).
 
-    External APIs (Lighthouse, OPR) are skipped — the extension
+    External APIs (Lighthouse, OPR) are skipped- the extension
     should pass the page's public URL in `url` if it wants partial
     external signals, or pass localhost if not applicable.
     """

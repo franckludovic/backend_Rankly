@@ -31,3 +31,13 @@ models/*.onnx
 *.pt
 *.tflite
 *.bin
+
+# Large data files
+data/cc_graph.db
+data/cc_graph.parquet
+data/*.db
+data/*.parquet
+
+# Server logs
+server.log
+*.log

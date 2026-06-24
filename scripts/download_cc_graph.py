@@ -1,40 +1,39 @@
 """
 scripts/download_cc_graph.py
 ============================
-ONE-TIME SETUP SCRIPT — run this once to build the local CC graph database.
+ONE-TIME SETUP SCRIPT- run this once to build cc_graph.parquet.
 
 Downloads the Common Crawl domain-level web graph ranks file (PageRank +
 Harmonic Centrality) and the vertices file (domain names + in-degree), then
-imports them into a local SQLite database for O(1) inference-time lookups.
+writes a single sorted Parquet file for production inference-time lookups.
 
-Usage — single release (same as before):
+Usage- single release (fastest, ~300-600 MB download):
     python scripts/download_cc_graph.py
     python scripts/download_cc_graph.py --release cc-main-2024-oct-nov-dec
 
-Usage — merge ALL known releases (recommended for maximum domain coverage):
+Usage- merge ALL known releases (recommended for maximum domain coverage):
     python scripts/download_cc_graph.py --merge-all
 
-    This downloads 5 releases (~2.5 GB total compressed) and merges them into
-    one database. Domains in multiple releases get:
+    Domains in multiple releases get:
       - PageRank / HC from the LATEST release (most current authority data)
       - in_degree = MAX across all releases (broadest link signal)
-    Final DB is ~600-900 MB (overlap means it is NOT 5x the single-release size).
 
-Usage — specific releases to merge:
+Usage- specific releases to merge:
     python scripts/download_cc_graph.py \\
         --releases cc-main-2024-25-dec-jan-feb cc-main-2024-oct-nov-dec cc-main-2024-jun-jul-aug
 
-The resulting database is saved to:
-    backend/data/cc_graph.db
+Output:
+    backend/data/cc_graph.parquet
 
-Database schema:
-    CREATE TABLE cc_domains (
-        domain                TEXT PRIMARY KEY,   -- eTLD+1, e.g. "example.com"
-        pagerank              REAL,
-        harmonic_centrality   REAL,
-        in_degree             INTEGER,            -- best referring domains count (raw)
-        referring_domains_log REAL                -- log1p(in_degree)
-    )
+    Sorted by domain, ZSTD-compressed.
+    DuckDB uses row-group min/max stats to find any domain without a full scan.
+
+Parquet schema:
+    domain                TEXT    -- eTLD+1, e.g. "example.com"
+    pagerank              DOUBLE
+    harmonic_centrality   DOUBLE
+    in_degree             INT64   -- raw referring-domains count
+    referring_domains_log DOUBLE  -- log1p(in_degree)
 
 File format (CC web graph ranks, tab-separated, node order aligned with vertices):
     <harmonic_centrality>\\t<pagerank>
@@ -43,15 +42,13 @@ Vertices file (for domain names + in-degree):
     <node_id>\\t<domain_reverse>\\t<in_degree>\\t<out_degree>
 
 NOTE: The full domain graph has ~100-200 million nodes per release.
-Each download is ~500 MB compressed; import takes ~5-15 minutes per release.
-Merging all 5 releases takes ~30-60 minutes total but only needs to be done once.
+Each download is ~500 MB compressed; building takes ~5-15 minutes per release.
 """
 
 import sys
 import gzip
 import io
 import math
-import sqlite3
 import argparse
 import logging
 from pathlib import Path
@@ -65,9 +62,9 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # ── Paths ─────────────────────────────────────────────────────────
-BASE_DIR = Path(__file__).parent.parent
-DATA_DIR = BASE_DIR / "data"
-DB_PATH  = DATA_DIR / "cc_graph.db"
+BASE_DIR      = Path(__file__).parent.parent
+DATA_DIR      = BASE_DIR / "data"
+PARQUET_PATH  = DATA_DIR / "cc_graph.parquet"
 
 # ── All known CC domain-level web graph releases ──────────────────
 # Ordered newest → oldest so --merge-all processes latest data last
@@ -247,92 +244,61 @@ def build_rows(
 
 
 # ══════════════════════════════════════════════════════════════════
-# DATABASE WRITERS
+# PARQUET WRITER
 # ══════════════════════════════════════════════════════════════════
 
-def _create_db(db_path: Path) -> sqlite3.Connection:
-    """Create a fresh SQLite database with the cc_domains schema."""
-    db_path.parent.mkdir(parents=True, exist_ok=True)
-    if db_path.exists():
-        db_path.unlink()
-        logger.info(f"Removed existing database: {db_path}")
-
-    con = sqlite3.connect(str(db_path))
-    con.execute("""
-        CREATE TABLE cc_domains (
-            domain                TEXT PRIMARY KEY,
-            pagerank              REAL NOT NULL DEFAULT 0.0,
-            harmonic_centrality   REAL NOT NULL DEFAULT 0.0,
-            in_degree             INTEGER NOT NULL DEFAULT 0,
-            referring_domains_log REAL NOT NULL DEFAULT 0.0
-        )
-    """)
-    con.commit()
-    logger.info(f"Created database: {db_path}")
-    return con
-
-
-def _write_rows_batch(
-    con: sqlite3.Connection,
-    rows: list[tuple],
-    merge_mode: bool = False,
-) -> int:
+def _write_parquet(rows: list[tuple], parquet_path: Path):
     """
-    Write rows to the DB in batches of 100k.
+    Write rows to a ZSTD-compressed Parquet file sorted by domain.
 
-    Single-release mode:   INSERT OR REPLACE (overwrite)
-    Merge mode:            INSERT OR REPLACE with MAX(in_degree) logic.
-                           Because we process oldest → newest, the final INSERT
-                           for each domain uses the latest release's PR/HC (correct),
-                           and we manually keep the max in_degree seen so far.
+    Sorting is critical: DuckDB uses per-row-group min/max statistics to
+    skip irrelevant row groups on  WHERE domain = ?  queries.  Without
+    sorting, every lookup would scan the entire file.
+
+    Requires:  pip install polars pyarrow
     """
-    cur       = con.cursor()
-    inserted  = 0
-    batch     = []
+    try:
+        import polars as pl
+    except ImportError:
+        logger.error("polars not installed. Run: pip install polars pyarrow")
+        sys.exit(1)
 
-    if merge_mode:
-        # In merge mode we use a conflict strategy:
-        # - pagerank / harmonic_centrality: new value wins (latest release)
-        # - in_degree: take MAX of existing and new
-        upsert_sql = """
-            INSERT INTO cc_domains (domain, pagerank, harmonic_centrality, in_degree, referring_domains_log)
-            VALUES (?, ?, ?, ?, ?)
-            ON CONFLICT(domain) DO UPDATE SET
-                pagerank              = excluded.pagerank,
-                harmonic_centrality   = excluded.harmonic_centrality,
-                in_degree             = MAX(cc_domains.in_degree, excluded.in_degree),
-                referring_domains_log = MAX(cc_domains.referring_domains_log, excluded.referring_domains_log)
-        """
-    else:
-        upsert_sql = "INSERT OR REPLACE INTO cc_domains VALUES (?,?,?,?,?)"
+    parquet_path.parent.mkdir(parents=True, exist_ok=True)
 
-    for row in rows:
-        batch.append(row)
-        if len(batch) >= 100_000:
-            cur.executemany(upsert_sql, batch)
-            con.commit()
-            inserted += len(batch)
-            batch = []
-            logger.info(f"  Written {inserted:,} rows...")
+    logger.info(f"Building Parquet: {len(rows):,} rows → sorting by domain...")
+    df = pl.DataFrame(
+        rows,
+        schema={
+            "domain"                : pl.Utf8,
+            "pagerank"              : pl.Float64,
+            "harmonic_centrality"   : pl.Float64,
+            "in_degree"             : pl.Int64,
+            "referring_domains_log" : pl.Float64,
+        },
+        orient="row",
+    ).sort("domain")
 
-    if batch:
-        cur.executemany(upsert_sql, batch)
-        con.commit()
-        inserted += len(batch)
-
-    return inserted
+    df.write_parquet(str(parquet_path), compression="zstd", statistics=True)
+    size_mb = parquet_path.stat().st_size / 1024 / 1024
+    logger.info(f"Parquet ready: {len(df):,} domains, {size_mb:.0f} MB → {parquet_path}")
 
 
-def _finalize_db(con: sqlite3.Connection, db_path: Path):
-    """Create index and log final stats."""
-    logger.info("Creating index on domain column...")
-    con.execute("CREATE INDEX IF NOT EXISTS idx_domain ON cc_domains(domain)")
-    con.commit()
+def _merge_rows(existing: dict, new_rows: list[tuple]) -> dict:
+    """
+    Merge new_rows into an existing domain→row dict.
 
-    count   = con.execute("SELECT COUNT(*) FROM cc_domains").fetchone()[0]
-    size_mb = db_path.stat().st_size / 1024 / 1024
-    logger.info(f"Database ready: {count:,} domains, {size_mb:.0f} MB → {db_path}")
-    con.close()
+    Strategy (same as before):
+      - pagerank / harmonic_centrality: new value wins (latest release)
+      - in_degree: MAX across releases (broadest link signal)
+    """
+    for domain, pr, hc, in_deg, ref_log in new_rows:
+        if domain in existing:
+            old = existing[domain]
+            best_in = max(old[3], in_deg)
+            existing[domain] = (domain, pr, hc, best_in, math.log1p(best_in))
+        else:
+            existing[domain] = (domain, pr, hc, in_deg, ref_log)
+    return existing
 
 
 # ══════════════════════════════════════════════════════════════════
@@ -342,7 +308,7 @@ def _finalize_db(con: sqlite3.Connection, db_path: Path):
 def process_release(release_key: str, vertices_only: bool = False) -> list[tuple]:
     """
     Download and parse one release. Returns list of row tuples.
-    Does NOT write to the DB — caller decides how to write.
+    Does NOT write to the DB- caller decides how to write.
     """
     urls  = RELEASES[release_key]
     label = urls["label"]
@@ -371,16 +337,14 @@ def process_release(release_key: str, vertices_only: bool = False) -> list[tuple
 
 
 def build_single(release_key: str, vertices_only: bool = False):
-    """Download and build DB from a single release (original behaviour)."""
+    """Download one release and write cc_graph.parquet."""
     rows = process_release(release_key, vertices_only)
-    con  = _create_db(DB_PATH)
-    _write_rows_batch(con, rows, merge_mode=False)
-    _finalize_db(con, DB_PATH)
+    _write_parquet(rows, PARQUET_PATH)
 
 
 def build_merged(release_keys: list[str], vertices_only: bool = False):
     """
-    Download and merge multiple releases into a single database.
+    Download and merge multiple releases into a single cc_graph.parquet.
 
     Merge strategy:
       - PageRank / Harmonic Centrality: latest release wins (most current data)
@@ -393,20 +357,16 @@ def build_merged(release_keys: list[str], vertices_only: bool = False):
     for i, key in enumerate(release_keys):
         logger.info(f"  {i+1}. {key}  ({RELEASES[key]['label']})")
 
-    con = _create_db(DB_PATH)
-
-    total_written = 0
+    merged: dict = {}
     for i, key in enumerate(release_keys):
         logger.info(f"\n[{i+1}/{len(release_keys)}] Starting release: {key}")
         rows = process_release(key, vertices_only)
-        written = _write_rows_batch(con, rows, merge_mode=True)
-        total_written += written
-        logger.info(f"  Release done: {written:,} rows written (total DB writes so far: {total_written:,})")
+        merged = _merge_rows(merged, rows)
+        logger.info(f"  Release merged: {len(merged):,} unique domains so far")
         del rows  # free memory before next release
 
-    _finalize_db(con, DB_PATH)
-    logger.info(f"\nAll releases merged. Total rows written: {total_written:,}")
-    logger.info("Note: unique domain count is much lower due to overlap across releases.")
+    logger.info(f"\nAll releases merged: {len(merged):,} unique domains total")
+    _write_parquet(list(merged.values()), PARQUET_PATH)
 
 
 # ══════════════════════════════════════════════════════════════════
@@ -423,10 +383,10 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Single release (fastest, ~300-600 MB):
+  # Single release (fastest, ~300-600 MB download):
   python scripts/download_cc_graph.py
 
-  # Merge all 5 known releases (recommended, ~600-900 MB final DB):
+  # Merge all 5 known releases (recommended, ~1-2 GB RAM during build):
   python scripts/download_cc_graph.py --merge-all
 
   # Merge just 3 releases:
@@ -434,6 +394,8 @@ Examples:
 
   # Skip PageRank/HC (vertices only, much faster):
   python scripts/download_cc_graph.py --merge-all --vertices-only
+
+Output: backend/data/cc_graph.parquet (sorted by domain, ZSTD-compressed)
         """
     )
 
@@ -459,7 +421,7 @@ Examples:
     parser.add_argument(
         "--vertices-only",
         action="store_true",
-        help="Only download vertices (skip ranks — PageRank/HC will be 0)"
+        help="Only download vertices (skip ranks- PageRank/HC will be 0)"
     )
     args = parser.parse_args()
 
@@ -467,7 +429,7 @@ Examples:
         build_merged(MERGE_ALL_ORDER, args.vertices_only)
 
     elif args.releases:
-        # User specified a custom list — process oldest to newest by list order
+        # User specified a custom list- process oldest to newest by list order
         build_merged(args.releases, args.vertices_only)
 
     else:
@@ -475,7 +437,7 @@ Examples:
         release = args.release or DEFAULT_RELEASE
         build_single(release, args.vertices_only)
 
-    logger.info("\nDone! Start the server — cc_graph lookups are now active.")
+    logger.info("\nDone! Drop cc_graph.parquet into backend/data/ and start the server.")
 
 
 if __name__ == "__main__":

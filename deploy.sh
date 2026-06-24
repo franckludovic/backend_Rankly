@@ -10,7 +10,7 @@
 
 set -e   # stop on any error
 
-echo "=== SEO Suggestion Engine — EC2 Deployment ==="
+echo "=== SEO Suggestion Engine- EC2 Deployment ==="
 
 # ── 1. Update system ──────────────────────────────────────────
 echo "[1/7] Updating system..."
@@ -34,7 +34,7 @@ if [ ! -f .env ]; then
 LIGHTHOUSE_API_KEY=your_lighthouse_api_key_here
 OPR_API_KEY=your_opr_api_key_here
 ENV
-    echo "  Created .env file — add your API keys!"
+    echo "  Created .env file- add your API keys!"
 fi
 
 # ── 5. Create __init__.py files ───────────────────────────────
@@ -47,7 +47,7 @@ touch api/__init__.py
 echo "[6/7] Checking models..."
 for f in models/xgb_classifier.joblib models/label_encoder.joblib models/clf_feature_cols.joblib; do
     if [ ! -f "$f" ]; then
-        echo "  WARNING: $f not found — copy from your notebook!"
+        echo "  WARNING: $f not found- copy from your notebook!"
     else
         echo "  OK: $f"
     fi

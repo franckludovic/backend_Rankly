@@ -2,7 +2,7 @@
 services/external_apis.py
 ==========================
 Lighthouse (PageSpeed Insights), Open PageRank, and Common Crawl API calls.
-All async so they run in parallel — saves 10-15 seconds per request.
+All async so they run in parallel- saves 10-15 seconds per request.
 
 V6 changes:
   - fetch_opr_score now supports batching multiple domains (for competitors)
@@ -87,7 +87,7 @@ def _opr_defaults() -> dict:
 
 
 # ═══════════════════════════════════════════════════════════════════
-# OPEN PAGERANK  (batch — up to 100 domains per request)
+# OPEN PAGERANK  (batch- up to 100 domains per request)
 # ═══════════════════════════════════════════════════════════════════
 
 async def fetch_opr_batch(domains: list[str]) -> dict[str, dict]:
@@ -155,7 +155,7 @@ async def fetch_cc_signals(domain: str) -> dict:
 
 
 # ═══════════════════════════════════════════════════════════════════
-# PARALLEL FETCHER — runs Lighthouse + OPR + CC at the same time
+# PARALLEL FETCHER- runs Lighthouse + OPR + CC at the same time
 # ═══════════════════════════════════════════════════════════════════
 
 async def fetch_all_external_signals(
@@ -171,7 +171,7 @@ async def fetch_all_external_signals(
 
     Returns a merged dict of all external signals.
     """
-    # CC lookup is always instant (SQLite or CDX fallback) — run regardless
+    # CC lookup is always instant (SQLite or CDX fallback)- run regardless
     cc_task = fetch_cc_signals(domain)
 
     if is_local:

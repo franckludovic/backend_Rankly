@@ -11,7 +11,7 @@ Key changes vs. previous version:
     semantic_to_authority_ratio derived correctly
 
 Also accepts pre-extracted features from the browser extension
-(so the extension doesn't need to send raw HTML — just features).
+(so the extension doesn't need to send raw HTML- just features).
 """
 
 import re
@@ -112,12 +112,78 @@ def compute_semantic_relevance(keyword: str, body_text: str, tfidf_fallback: flo
             show_progress_bar=False,
         )
         cosine_sim = float(np.dot(vecs[0], vecs[1]))
-        # Clip to [0, 1] — cosine can be slightly negative for unrelated texts
+        # Clip to [0, 1]- cosine can be slightly negative for unrelated texts
         return round(max(0.0, cosine_sim), 6)
 
     except Exception as e:
         logger.warning(f"Semantic similarity failed, using TF-IDF proxy: {e}")
         return float(tfidf_fallback)
+
+
+# ── Page type detection (for schema generation) ──────────────────
+
+def detect_page_type(soup, title: str, keyword: str) -> tuple[str, dict]:
+    """
+    Detect the most likely page type for schema markup selection.
+    Must be called before noise-stripping decomposition.
+    Returns (page_type_str, context_dict).
+    """
+    title_lower = title.lower()
+    full_text   = soup.get_text(separator=" ", strip=True)
+    text_lower  = full_text.lower()
+
+    # Product
+    has_price       = bool(re.search(r"\$\s*\d+|price\s*:|\badd to cart\b|\bbuy now\b", text_lower))
+    has_offer_prop  = bool(soup.find(attrs={"itemprop": re.compile(r"price|offer", re.I)}))
+    if has_price or has_offer_prop:
+        return "Product", {}
+
+    # FAQPage
+    details_tags = soup.find_all("details")
+    q_marks      = text_lower.count("?")
+    faq_signal   = bool(re.search(r"faq|frequently asked|questions?\s+and\s+answers?", text_lower))
+    if (details_tags and q_marks >= 2) or (faq_signal and q_marks >= 3):
+        questions = [d.find("summary").get_text(strip=True) for d in details_tags if d.find("summary")][:6]
+        if not questions:
+            questions = [t.get_text(strip=True) for t in soup.find_all(["h3", "h4"]) if t.get_text(strip=True).endswith("?")][:6]
+        return "FAQPage", {"questions": questions}
+
+    # HowTo
+    how_to_title = bool(re.search(r"^how (to|do|can|should)\b", title_lower))
+    ol_tags = soup.find_all("ol")
+    if how_to_title and ol_tags:
+        steps = [li.get_text(strip=True)[:150] for li in ol_tags[0].find_all("li")][:8]
+        return "HowTo", {"steps": steps}
+
+    # Article
+    has_article_elem = bool(soup.find("article"))
+    has_time_elem    = bool(soup.find("time"))
+    has_author       = (
+        bool(soup.find(class_=re.compile(r"author|byline", re.I))) or
+        bool(soup.find(attrs={"itemprop": "author"}))
+    )
+    date_pat = bool(re.search(
+        r"\b(january|february|march|april|may|june|july|august|september|"
+        r"october|november|december)\b\s+\d{1,2},?\s+\d{4}", text_lower
+    ))
+    if has_article_elem or (has_time_elem and (has_author or date_pat)):
+        return "Article", {}
+
+    # LocalBusiness
+    phone_pat   = bool(re.search(r"\(\d{3}\)\s*\d{3}[-.\s]\d{4}|\+\d[\d\s\-]{7,15}", full_text))
+    address_pat = bool(re.search(
+        r"\d{1,5}\s+\w[\w\s]+\b(street|st|avenue|ave|road|rd|boulevard|blvd|drive|dr|lane|ln)\b",
+        full_text, re.I
+    ))
+    has_maps    = bool(soup.find("iframe", src=re.compile(r"google.*map|maps\.google", re.I)))
+    if (phone_pat and address_pat) or has_maps:
+        return "LocalBusiness", {}
+
+    # Article fallback for long content with a date element
+    if len(full_text.split()) > 500 and has_time_elem:
+        return "Article", {}
+
+    return "WebPage", {}
 
 
 # ── Main feature extraction ───────────────────────────────────────
@@ -170,6 +236,39 @@ def extract_features_from_html(html: str, url: str, keyword: str) -> dict:
         "meta", attrs={"name": re.compile(r"^robots$", re.I)}
     ) else 0
 
+    # ── Max DOM Depth ──
+    max_depth = 0
+    root = soup_full.find("html") or soup_full
+    stack = [(root, 1)]
+    while stack:
+        elem, depth = stack.pop()
+        if depth > max_depth:
+            max_depth = depth
+        if hasattr(elem, "children"):
+            for child in elem.children:
+                if child.name is not None:
+                    stack.append((child, depth + 1))
+    dom_depth = max_depth
+
+    # ── Layout Shift Images Count ──
+    images_full = soup_full.find_all("img")
+    missing_img_dimensions = 0
+    for img in images_full:
+        width = img.get("width")
+        height = img.get("height")
+        if not (width and width.strip() and height and height.strip()):
+            missing_img_dimensions += 1
+
+    # ── Modern Image Formats Ratio ──
+    modern_img_count = 0
+    total_imgs = len(images_full)
+    for img in images_full:
+        src = img.get("src", "").lower().strip()
+        clean_src = src.split("?")[0].split("#")[0]
+        if clean_src.endswith((".webp", ".svg", ".avif")):
+            modern_img_count += 1
+    modern_img_ratio = round(modern_img_count / total_imgs, 4) if total_imgs > 0 else 0.0
+
     soup = soup_full
 
     # ── Title ──────────────────────────────────────────────────────
@@ -197,8 +296,11 @@ def extract_features_from_html(html: str, url: str, keyword: str) -> dict:
     h1_has_kw = 1 if any(keyword_in_text(kw, h.get_text()) for h in h1_tags) else 0
     h1_text   = h1_tags[0].get_text(strip=True) if h1_tags else ""
 
+    # ── Detect page type before stripping nav/footer/header ──────────
+    page_type, schema_context = detect_page_type(soup, title_text, kw)
+
     # ── Strip noise ────────────────────────────────────────────────
-    for tag in soup(["script", "style", "nav", "footer", "header"]):
+    for tag in soup(["script", "style", "nav", "footer", "header", "aside"]):
         tag.decompose()
 
     # ── Content ────────────────────────────────────────────────────
@@ -287,10 +389,17 @@ def extract_features_from_html(html: str, url: str, keyword: str) -> dict:
 
     keyword_prominence_score = round(keyword_signal_count / 3, 4) if keyword_signal_count > 0 else 0
 
+    # Locate primary content container if it exists
+    main_tag = soup.find("main") or soup.find("article")
+    if main_tag:
+        semantic_body_text = main_tag.get_text(separator=" ")
+    else:
+        semantic_body_text = clean_text
+
     # ── Real semantic relevance (all-MiniLM-L6-v2) ───────────────
     # Uses cosine similarity between keyword embedding and body text embedding.
     # Falls back to tfidf_relevance if the semantic model is unavailable.
-    semantic_relevance = compute_semantic_relevance(kw, clean_text, tfidf_relevance)
+    semantic_relevance = compute_semantic_relevance(kw, semantic_body_text, tfidf_relevance)
 
     # ── Off-page / authority features ────────────────────────────────
     # These are populated AFTER scraping by the route handler:
@@ -303,16 +412,16 @@ def extract_features_from_html(html: str, url: str, keyword: str) -> dict:
 
     # domain_frequency is not computable at single-URL inference time
     domain_frequency     = 0
-    domain_frequency_log = 0.0   # log1p(domain_frequency) — stays 0 at inference
+    domain_frequency_log = 0.0   # log1p(domain_frequency)- stays 0 at inference
 
-    # Common Crawl graph signals — filled by cc_graph.fetch_cc_signals()
+    # Common Crawl graph signals- filled by cc_graph.fetch_cc_signals()
     # after extract_features_from_html() returns.  Defaults here are overwritten.
     cc_pagerank              = 0.0
     cc_harmonic_centrality   = 0.0
     cc_referring_domains_log = 0.0
     cc_found                 = 0
 
-    # Authority ratios — recomputed in predictor._enrich_with_external()
+    # Authority ratios- recomputed in predictor._enrich_with_external()
     # once cc_pagerank is known. Placeholder 0 here.
     relevance_to_authority_ratio = 0.0
     semantic_to_authority_ratio  = 0.0
@@ -323,7 +432,7 @@ def extract_features_from_html(html: str, url: str, keyword: str) -> dict:
     keyword_position_std = 0.0
 
     # Query-relative z-score and percentile features
-    # (require a competitor set — default to 0 = average/median)
+    # (require a competitor set- default to 0 = average/median)
     _vs_query_z_features = {
         "cc_referring_domains_log_vs_query_z"    : 0.0,
         "cc_pagerank_vs_query_z"                 : 0.0,
@@ -422,6 +531,9 @@ def extract_features_from_html(html: str, url: str, keyword: str) -> dict:
         "has_og_tags"              : has_og_tags,
         "has_robots_meta"          : has_robots_meta,
         "text_to_html_ratio"       : text_to_html_ratio,
+        "dom_depth"                : dom_depth,
+        "missing_img_dimensions"   : missing_img_dimensions,
+        "modern_img_ratio"         : modern_img_ratio,
 
         # ── Keyword features (3) ─────────────────────────────────
         "keyword_word_count"       : keyword_word_count,
@@ -447,7 +559,7 @@ def extract_features_from_html(html: str, url: str, keyword: str) -> dict:
 
         # ── Off-page: domain frequency ────────────────────────────
         "domain_frequency"         : domain_frequency,        # raw (not a model input)
-        "domain_frequency_log"     : domain_frequency_log,    # log1p — V6 regressor input
+        "domain_frequency_log"     : domain_frequency_log,    # log1p- V6 regressor input
 
         # ── Off-page: Common Crawl (default 0 at inference) ──────
         "cc_pagerank"              : cc_pagerank,
@@ -474,6 +586,10 @@ def extract_features_from_html(html: str, url: str, keyword: str) -> dict:
         "canonical_url"            : canonical_url,
         "index_status"             : index_status,
         "body_has_keyword"         : keyword_exact_match,
+
+        # ── Page type (for schema generation) ────────────────────
+        "page_type"                : page_type,
+        "schema_context"           : schema_context,
     }
 
     # Merge in query-relative z-score and percentile features (all default 0)

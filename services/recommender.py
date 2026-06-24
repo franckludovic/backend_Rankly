@@ -27,7 +27,7 @@ def generate_recommendations(features: dict, quality: str) -> List[dict]:
     """
     recs = []
 
-    # ── CRITICAL — Missing elements ────────────────────────────
+    # ── CRITICAL- Missing elements ────────────────────────────
 
     if features.get("meta_desc_present", 1) == 0:
         recs.append(Recommendation(
@@ -61,7 +61,7 @@ def generate_recommendations(features: dict, quality: str) -> List[dict]:
     if word_count < 300:
         recs.append(Recommendation(
             priority=2, impact="HIGH", category="Content",
-            issue=f"Thin content — only {word_count} words",
+            issue=f"Thin content- only {word_count} words",
             action="Expand content to at least 600 words. "
                    "High-quality pages in this dataset average 847 words.",
             metric=f"{word_count} words (target: 600+)"
@@ -147,7 +147,7 @@ def generate_recommendations(features: dict, quality: str) -> List[dict]:
                 priority=4, impact="MEDIUM", category="Meta",
                 issue="Target keyword missing from meta description",
                 action="Include your target keyword naturally in the "
-                       "meta description — improves click-through rate.",
+                       "meta description- improves click-through rate.",
                 metric="Keyword absent from description"
             ))
 

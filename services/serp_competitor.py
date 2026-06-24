@@ -72,11 +72,130 @@ HEADERS = {
 # SERP URL FETCHING
 # ═══════════════════════════════════════════════════════════════════
 
-async def fetch_serp_urls(keyword: str, n: int = SERPER_NUM_RESULTS) -> list[str]:
+def _extract_serp_features(data: dict) -> list[dict]:
+    """
+    Parse a raw Serper.dev response and return a list of SERP feature opportunity dicts.
+    Each dict has: feature, icon, present, traffic_impact, recommendation, (optional) details.
+    Called with zero extra API credits- uses the response already fetched for competitor URLs.
+    """
+    features = []
+
+    if data.get("answerBox"):
+        features.append({
+            "feature": "Featured Snippet",
+            "icon": "snippet",
+            "present": True,
+            "traffic_impact": "high",
+            "recommendation": (
+                "Add a direct-answer paragraph immediately after your first H2. "
+                "Start with the question phrase, answer concisely in 40–60 words, "
+                "then expand with detail below. Use a definition, step list, or table format."
+            ),
+        })
+
+    paa = data.get("peopleAlsoAsk", [])
+    if paa:
+        questions = [q.get("question", "") for q in paa if q.get("question")][:4]
+        features.append({
+            "feature": "People Also Ask",
+            "icon": "paa",
+            "present": True,
+            "traffic_impact": "high",
+            "recommendation": (
+                "Add an FAQ section answering these exact questions. "
+                "Mark it up with FAQPage schema so your answers can appear directly "
+                "inside the PAA box without a click."
+            ),
+            "details": {"questions": questions},
+        })
+
+    if data.get("knowledgeGraph"):
+        features.append({
+            "feature": "Knowledge Panel",
+            "icon": "knowledge",
+            "present": True,
+            "traffic_impact": "medium",
+            "recommendation": (
+                "This is an entity/brand query. Strengthen your entity signals: "
+                "get a Wikipedia article or Wikidata entry, add Organization or Person schema "
+                "to your homepage, and ensure your name/address/phone is consistent across the web."
+            ),
+        })
+
+    if data.get("images"):
+        features.append({
+            "feature": "Image Pack",
+            "icon": "images",
+            "present": True,
+            "traffic_impact": "medium",
+            "recommendation": (
+                "Add 3–5 high-quality images with descriptive filenames (keyword-phrase.jpg) "
+                "and alt text containing the keyword. Submit an image sitemap. "
+                "Images with unique visual value outperform stock photos."
+            ),
+        })
+
+    if data.get("videos"):
+        features.append({
+            "feature": "Video Carousel",
+            "icon": "video",
+            "present": True,
+            "traffic_impact": "medium",
+            "recommendation": (
+                "Create a tutorial or explainer video for this topic. "
+                "Upload to YouTube with the keyword in the title and description. "
+                "Embed it on your page and add VideoObject schema."
+            ),
+        })
+
+    if data.get("topStories"):
+        features.append({
+            "feature": "News Box",
+            "icon": "news",
+            "present": True,
+            "traffic_impact": "medium",
+            "recommendation": (
+                "This keyword rewards recency. Publish a fresh article or update existing content "
+                "with today's date. Add Article schema with datePublished and dateModified. "
+                "Register your site in Google News if relevant."
+            ),
+        })
+
+    if data.get("localResults") or data.get("places"):
+        features.append({
+            "feature": "Local Pack",
+            "icon": "local",
+            "present": True,
+            "traffic_impact": "high",
+            "recommendation": (
+                "Optimize your Google Business Profile: add photos, respond to all reviews, "
+                "and ensure your name/address/phone matches your website exactly. "
+                "Add LocalBusiness schema to your homepage."
+            ),
+        })
+
+    ads = data.get("ads", [])
+    if ads:
+        features.append({
+            "feature": "Paid Ads",
+            "icon": "ads",
+            "present": True,
+            "traffic_impact": "info",
+            "recommendation": (
+                f"{len(ads)} paid ad{'s' if len(ads) > 1 else ''} occupy the top of SERP. "
+                "High commercial intent- your organic content must offer more depth than ads. "
+                "Consider a comparison or 'best of' page to capture users who distrust ads."
+            ),
+        })
+
+    return features
+
+
+async def fetch_serp_urls(keyword: str, n: int = SERPER_NUM_RESULTS) -> tuple[list[str], list[dict]]:
     """
     Fetch top N organic Google results for a keyword via Serper.dev API.
-    Returns a list of URLs (may be shorter than N if fewer organic results).
-    Returns [] on API failure.
+    Returns (urls, serp_features)- both extracted from the same single API call.
+    Returns ([], []) on API failure.
     """
     payload = {"q": keyword, "num": n, "gl": "us", "hl": "en"}
     headers = {"X-API-KEY": SERPER_API_KEY, "Content-Type": "application/json"}
@@ -87,22 +206,48 @@ async def fetch_serp_urls(keyword: str, n: int = SERPER_NUM_RESULTS) -> list[str
 
         if resp.status_code != 200:
             logger.warning(f"Serper API error: status {resp.status_code} for '{keyword}'")
-            return []
+            return [], []
 
-        data    = resp.json()
-        organic = data.get("organic", [])
-        urls    = [item["link"] for item in organic if "link" in item]
-        logger.info(f"Serper: {len(urls)} competitor URLs for '{keyword}'")
-        return urls[:n]
+        data         = resp.json()
+        organic      = data.get("organic", [])
+        urls         = [item["link"] for item in organic if "link" in item]
+        serp_features = _extract_serp_features(data)
+        logger.info(f"Serper: {len(urls)} competitor URLs, {len(serp_features)} SERP features for '{keyword}'")
+        return urls[:n], serp_features
 
     except Exception as e:
         logger.error(f"Serper fetch error for '{keyword}': {e}")
-        return []
+        return [], []
 
 
 # ═══════════════════════════════════════════════════════════════════
 # SINGLE COMPETITOR SCRAPE
 # ═══════════════════════════════════════════════════════════════════
+
+async def _playwright_fetch(url: str) -> str:
+    """
+    Headless-browser fallback for JS-rendered pages (React, Vue, Angular, etc.).
+    Returns rendered HTML string, or "" on failure.
+    """
+    try:
+        from playwright.async_api import async_playwright
+        async with async_playwright() as p:
+            browser = await p.chromium.launch(headless=True)
+            ctx  = await browser.new_context(
+                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                           "AppleWebKit/537.36 (KHTML, like Gecko) "
+                           "Chrome/124.0.0.0 Safari/537.36",
+                java_script_enabled=True,
+            )
+            page = await ctx.new_page()
+            await page.goto(url, wait_until="networkidle", timeout=30_000)
+            html = await page.content()
+            await browser.close()
+            return html
+    except Exception as e:
+        logger.debug(f"Playwright fallback failed for {url}: {e}")
+        return ""
+
 
 async def _scrape_one_competitor(
     url: str,
@@ -111,10 +256,12 @@ async def _scrape_one_competitor(
 ) -> Optional[dict]:
     """
     Scrape a single competitor URL: fetch HTML, extract features, fetch CC + OPR.
+    Tries fast httpx first; falls back to Playwright for JS-rendered pages.
     Returns feature dict or None on failure.
     """
     async with semaphore:
-        # ── Fetch HTML ─────────────────────────────────────────
+        # ── Fast fetch (httpx) ─────────────────────────────────
+        html = ""
         try:
             async with httpx.AsyncClient(
                 timeout=SERP_SCRAPE_TIMEOUT,
@@ -123,17 +270,26 @@ async def _scrape_one_competitor(
             ) as client:
                 resp = await client.get(url)
 
-            if resp.status_code != 200:
-                logger.debug(f"Competitor skip (HTTP {resp.status_code}): {url}")
-                return None
-
-            html = resp.text
+            if resp.status_code == 200:
+                html = resp.text
+            else:
+                logger.debug(f"Competitor HTTP {resp.status_code}: {url}- trying Playwright")
 
         except Exception as e:
-            logger.debug(f"Competitor scrape failed ({e}): {url}")
+            logger.debug(f"Competitor httpx failed ({e}): {url}- trying Playwright")
+
+        # ── Playwright fallback for JS-rendered / blocked pages ─
+        # Trigger if: request failed, or HTML looks like an SPA shell
+        # (fewer than 300 words after stripping tags is a strong signal)
+        if not html or html.count(" ") < 300:
+            logger.info(f"JS-render fallback (Playwright): {url}")
+            html = await _playwright_fetch(url)
+
+        if not html:
+            logger.debug(f"Competitor skip (no HTML): {url}")
             return None
 
-        # ── Extract features (CPU-bound — run in thread pool) ──
+        # ── Extract features (CPU-bound- run in thread pool) ──
         try:
             loop = asyncio.get_event_loop()
             features = await loop.run_in_executor(
@@ -151,18 +307,6 @@ async def _scrape_one_competitor(
                 features.update(cc)
             except Exception as e:
                 logger.debug(f"CC signal error for {domain}: {e}")
-
-        # ── OPR signals ────────────────────────────────────────
-        # Imported here to avoid circular imports; OPR is async
-        if domain:
-            try:
-                from services.external_apis import fetch_opr_score
-                opr = await fetch_opr_score(domain)
-                features["opr_page_rank"]    = opr.get("opr_page_rank", 0.0)
-                features["opr_rank_log"]     = opr.get("opr_rank_log", 0.0)
-                features["opr_domain_found"] = opr.get("opr_domain_found", 0)
-            except Exception as e:
-                logger.debug(f"OPR error for {domain}: {e}")
 
         # lighthouse_seo_score stays at -1 for competitors (too slow to fetch for all)
         # We use -1 as a sentinel so the z-score computation can skip it if needed.
@@ -198,6 +342,35 @@ async def scrape_competitors(
         if isinstance(r, dict):
             competitors.append(r)
         # None and exceptions are skipped (already logged)
+
+    # ── Batch fetch OPR signals for all successful competitors ──
+    domains = [c.get("domain", "") for c in competitors if c.get("domain", "")]
+    if domains:
+        try:
+            from services.external_apis import fetch_opr_batch
+            opr_results = await fetch_opr_batch(domains)
+            for c in competitors:
+                dom = c.get("domain", "")
+                if dom and dom in opr_results:
+                    opr = opr_results[dom]
+                    c["opr_page_rank"]    = opr.get("opr_page_rank", 0.0)
+                    c["opr_rank_log"]     = opr.get("opr_rank_log", 0.0)
+                    c["opr_domain_found"] = opr.get("opr_domain_found", 0)
+                else:
+                    c["opr_page_rank"]    = 0.0
+                    c["opr_rank_log"]     = 0.0
+                    c["opr_domain_found"] = 0
+        except Exception as e:
+            logger.error(f"OPR batch retrieval failed: {e}")
+            for c in competitors:
+                c["opr_page_rank"]    = 0.0
+                c["opr_rank_log"]     = 0.0
+                c["opr_domain_found"] = 0
+    else:
+        for c in competitors:
+            c["opr_page_rank"]    = 0.0
+            c["opr_rank_log"]     = 0.0
+            c["opr_domain_found"] = 0
 
     logger.info(f"Competitors scraped: {len(competitors)}/{len(urls)} succeeded")
     return competitors
@@ -239,7 +412,7 @@ def compute_query_relative_features(
     result = {}
 
     if not competitors:
-        # No competitor data — default all to 0
+        # No competitor data- default all to 0
         for feat in COMPARISON_FEATURES:
             result[f"{feat}_vs_query_z"]   = 0.0
             result[f"{feat}_vs_query_pct"] = 0.0
@@ -295,23 +468,38 @@ def compute_query_relative_features(
 async def run_competitor_pipeline(
     keyword: str,
     target_url: str = "",
-) -> tuple[list[dict], dict]:
+) -> tuple[list[dict], list[dict]]:
     """
-    Full pipeline:
-      1. Fetch SERP results for keyword
-      2. Remove target URL from competitor list (don't compare against itself)
-      3. Scrape all competitors in parallel (with OPR + CC per competitor)
-      4. Return (competitors, {placeholder z/pct dict with 0s})
+    Full pipeline. Returns (competitors, serp_features).
 
-    The caller must call compute_query_relative_features(target, competitors)
-    AFTER the target features are enriched with its own OPR/CC/Lighthouse,
-    since those are needed for the target_val in the z-score formula.
+    1. Check cache- if hit, return cached data for both.
+    2. Cache miss: fetch SERP (URLs + features in one call), scrape competitors.
+    3. Cache both competitors and SERP features.
+    4. Filter out target URL and return.
     """
-    urls = await fetch_serp_urls(keyword)
+    from services.serp_cache import (
+        get_cached_competitors, set_cached_competitors,
+        get_cached_serp_features, set_cached_serp_features,
+    )
 
-    # Remove the target URL if it appears in the SERP results
+    cached_comps = get_cached_competitors(keyword)
+    cached_feats = get_cached_serp_features(keyword)
+
+    if cached_comps is not None and cached_feats is not None:
+        logger.info(f"Full cache hit for keyword: '{keyword}'")
+        if target_url:
+            cached_comps = [c for c in cached_comps if c.get("url", "").rstrip("/") != target_url.rstrip("/")]
+        return cached_comps, cached_feats
+
+    # Cache miss- single Serper.dev call gets both URLs and SERP features
+    urls, serp_features = await fetch_serp_urls(keyword)
+    competitors         = await scrape_competitors(urls, keyword)
+
+    if competitors:
+        set_cached_competitors(keyword, competitors)
+    set_cached_serp_features(keyword, serp_features)
+
     if target_url:
-        urls = [u for u in urls if u.rstrip("/") != target_url.rstrip("/")]
+        competitors = [c for c in competitors if c.get("url", "").rstrip("/") != target_url.rstrip("/")]
 
-    competitors = await scrape_competitors(urls, keyword)
-    return competitors
+    return competitors, serp_features

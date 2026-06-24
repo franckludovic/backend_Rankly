@@ -8,8 +8,8 @@ V6 notes:
   - Classifier uses 51 features (on-page + semantic).
   - Regressor uses 97 features (adds OPR, CC, domain-freq, competition,
     and query-relative z-score / percentile features).
-  - domain_frequency_log is already log1p'd by the extractor — NOT in LOG_FEATURES.
-  - cc_referring_domains_log is already log1p'd by training pipeline — NOT in LOG_FEATURES.
+  - domain_frequency_log is already log1p'd by the extractor- NOT in LOG_FEATURES.
+  - cc_referring_domains_log is already log1p'd by training pipeline- NOT in LOG_FEATURES.
 """
 
 import numpy as np
@@ -181,7 +181,7 @@ def run_regression(features: dict) -> dict:
         "r2_score"      : registry.reg_r2,
         "disclaimer"    : (
             f"Predicted rank: ~{pred_rank} ({tier}). "
-            f"Note: rank prediction has R²={registry.reg_r2:.2f} — "
+            f"Note: rank prediction has R²={registry.reg_r2:.2f}- "
             "on-page features explain limited ranking variance. "
             "Off-page factors (backlinks, domain authority) "
             "are the primary ranking drivers."
@@ -212,11 +212,11 @@ def predict(features: dict, external_signals: dict | None = None) -> dict:
 
     if not lighthouse_available:
         accuracy_note = (
-            "46.5% accuracy — Lighthouse score unavailable. "
+            "46.5% accuracy- Lighthouse score unavailable. "
             "Deploy page or use public URL for full 83.8% analysis."
         )
     else:
-        accuracy_note = "83.8% accuracy — full feature set"
+        accuracy_note = "83.8% accuracy- full feature set"
 
     clf_result = run_classification(features)
     reg_result = run_regression(features)

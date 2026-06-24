@@ -6,7 +6,7 @@ Loads all models once at startup and keeps them in memory.
 TO SWAP MODELS:
   1. Replace the .joblib files in models/ folder
   2. Restart the server (or call reload_models() endpoint)
-  That's it — no code changes needed anywhere else.
+  That's it- no code changes needed anywhere else.
 """
 
 import joblib
@@ -24,7 +24,7 @@ logger = logging.getLogger(__name__)
 class ModelRegistry:
     """
     Holds all ML models in memory.
-    Loaded once at startup — fast inference, no disk reads per request.
+    Loaded once at startup- fast inference, no disk reads per request.
     """
 
     def __init__(self):
@@ -73,7 +73,7 @@ class ModelRegistry:
         self.loaded = True
 
         logger.info(
-            f"Models ready — "
+            f"Models ready- "
             f"clf_features={len(self.clf_features)}  "
             f"reg_features={len(self.reg_features) if self.reg_features else 0}  "
             f"semantic={'✓' if self.semantic_model else '✗'}"
@@ -115,5 +115,5 @@ class ModelRegistry:
         }
 
 
-# Singleton — shared across all requests
+# Singleton- shared across all requests
 registry = ModelRegistry()

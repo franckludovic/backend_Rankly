@@ -1,4 +1,4 @@
-# SEO Suggestion Engine — Backend API
+# SEO Suggestion Engine- Backend API
 
 ## Structure
 ```
@@ -48,7 +48,7 @@ uvicorn main:app --reload --port 8000
 cp new_xgb_classifier.joblib models/xgb_classifier.joblib
 
 # 2. Update accuracy in config (optional)
-# edit models/model_registry.py — change clf_accuracy value
+# edit models/model_registry.py- change clf_accuracy value
 
 # 3. Hot-reload without restart
 curl -X POST http://localhost:8000/model/reload
