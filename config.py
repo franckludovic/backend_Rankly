@@ -38,9 +38,10 @@ RESEND_FROM_EMAIL   = os.getenv("RESEND_FROM_EMAIL", "Rankly <alerts@rankly.app>
 LS_API_KEY         = os.getenv("LS_API_KEY", "")
 LS_STORE_ID        = os.getenv("LS_STORE_ID", "")
 LS_WEBHOOK_SECRET  = os.getenv("LS_WEBHOOK_SECRET", "")
-LS_VARIANT_PRO     = os.getenv("LS_VARIANT_PRO", "")     # variant ID from LS dashboard
-LS_VARIANT_AGENCY  = os.getenv("LS_VARIANT_AGENCY", "")
-LS_VARIANT_BUSINESS= os.getenv("LS_VARIANT_BUSINESS", "")
+LS_VARIANT_PRO        = os.getenv("LS_VARIANT_PRO", "")        # variant ID from LS dashboard
+LS_VARIANT_AGENCY     = os.getenv("LS_VARIANT_AGENCY", "")
+LS_VARIANT_BUSINESS   = os.getenv("LS_VARIANT_BUSINESS", "")
+LS_VARIANT_DEV_ADDON  = os.getenv("LS_VARIANT_DEV_ADDON", "")  # Pro add-on: unlocks API key access
 APP_BASE_URL       = os.getenv("APP_BASE_URL", "http://localhost:5173")
 
 # ── Lighthouse settings ───────────────────────────────────────────
@@ -60,19 +61,25 @@ SERP_MAX_CONCURRENT      = 10          # max parallel competitor scrapes
 
 # ── Common Crawl web graph ────────────────────────────────────────
 # Pre-computed domain-level PageRank + Harmonic Centrality + referring domains.
-# Run scripts/download_cc_graph.py ONCE to download and build this database.
-CC_PARQUET_PATH = DATA_DIR / "cc_graph.parquet"   # Portable Parquet lookup file
-# CDX API fallback: used for cc_found check when file is absent
+# cc_lookup.duckdb is built once from cc_graph.parquet via scripts/build_cc_lookup.py.
+# The parquet is kept as the source archive for future rebuilds.
+CC_DUCKDB_PATH  = DATA_DIR / "cc_lookup.duckdb"   # Fast sorted DuckDB (primary)
+CC_PARQUET_PATH = DATA_DIR / "cc_graph.parquet"   # Archive / source for rebuilds
+# CDX API fallback: used for cc_found check when both files are absent
 CC_CDX_ENDPOINT = "https://index.commoncrawl.org/CC-MAIN-2024-10-index"
 CC_CDX_TIMEOUT  = 8                               # seconds
 
-# ── CORS- add your extension ID and dashboard URL ───────────────
+# ── CORS ────────────────────────────────────────────────────────
+# Localhost defaults for dev; production origins come from the
+# ALLOWED_ORIGINS env var (comma-separated), e.g.
+#   ALLOWED_ORIGINS="https://rankly.pages.dev,https://rankly.app"
 ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://localhost:5173",
-    # Add your production URL here before deploying, e.g.:
-    # "https://rankly.app",
 ]
+_extra_origins = os.getenv("ALLOWED_ORIGINS", "")
+if _extra_origins:
+    ALLOWED_ORIGINS += [o.strip() for o in _extra_origins.split(",") if o.strip()]
 
 # ── Server ────────────────────────────────────────────────────────
 HOST = "0.0.0.0"

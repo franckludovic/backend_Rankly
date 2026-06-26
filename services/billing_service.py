@@ -25,6 +25,7 @@ from config import (
     LS_VARIANT_PRO,
     LS_VARIANT_AGENCY,
     LS_VARIANT_BUSINESS,
+    LS_VARIANT_DEV_ADDON,
     APP_BASE_URL,
 )
 from storage import subscription_repository as sub_repo
@@ -35,9 +36,10 @@ logger = logging.getLogger(__name__)
 LS_BASE = "https://api.lemonsqueezy.com/v1"
 
 PLAN_VARIANT_MAP: dict[str, str] = {
-    "pro":      LS_VARIANT_PRO,
-    "agency":   LS_VARIANT_AGENCY,
-    "business": LS_VARIANT_BUSINESS,
+    "pro":       LS_VARIANT_PRO,
+    "agency":    LS_VARIANT_AGENCY,
+    "business":  LS_VARIANT_BUSINESS,
+    "dev_addon": LS_VARIANT_DEV_ADDON,  # Pro add-on: unlocks API key access
 }
 
 
@@ -59,7 +61,7 @@ async def create_checkout_session(user_id: str, user_email: str, plan: str) -> s
     """Create a Lemon Squeezy checkout and return the hosted checkout URL."""
     variant_id = PLAN_VARIANT_MAP.get(plan)
     if not variant_id:
-        raise ValueError(f"Unknown plan: '{plan}'. Valid plans: pro, agency, business.")
+        raise ValueError(f"Unknown plan: '{plan}'. Valid plans: pro, agency, business, dev_addon.")
     if not LS_API_KEY or not LS_STORE_ID:
         raise RuntimeError("LS_API_KEY or LS_STORE_ID is not configured.")
 
@@ -149,13 +151,22 @@ async def _handle_active(event: dict) -> None:
         logger.warning(f"Webhook missing user_id in custom_data: {meta.get('event_name')}")
         return
 
-    variant_id    = str(attrs.get("variant_id", ""))
-    plan          = _variant_to_plan().get(variant_id, "free")
-    ls_sub_id     = str(data.get("id", ""))
-    ls_customer_id= str(attrs.get("customer_id", ""))
-    status        = attrs.get("status", "active")
-    renews_at     = attrs.get("renews_at")
+    variant_id     = str(attrs.get("variant_id", ""))
+    ls_sub_id      = str(data.get("id", ""))
+    ls_customer_id = str(attrs.get("customer_id", ""))
+    status         = attrs.get("status", "active")
+    renews_at      = attrs.get("renews_at")
 
+    if LS_VARIANT_DEV_ADDON and variant_id == str(LS_VARIANT_DEV_ADDON):
+        # Developer Add-on purchased — enable API access without touching the main plan
+        sub_repo.upsert_subscription(user_id, {
+            "dev_addon":                    True,
+            "ls_dev_addon_subscription_id": ls_sub_id,
+        })
+        logger.info(f"User {user_id} → dev_addon enabled")
+        return
+
+    plan = _variant_to_plan().get(variant_id, "free")
     sub_repo.upsert_subscription(user_id, {
         "ls_subscription_id": ls_sub_id,
         "ls_customer_id":     ls_customer_id,
@@ -182,12 +193,23 @@ async def _handle_active(event: dict) -> None:
 
 
 def _handle_cancelled(event: dict) -> None:
-    data   = event.get("data", {})
-    attrs  = data.get("attributes", {})
-    meta   = event.get("meta", {})
-
-    user_id   = meta.get("custom_data", {}).get("user_id")
+    data      = event.get("data", {})
+    attrs     = data.get("attributes", {})
+    meta      = event.get("meta", {})
     ls_sub_id = str(data.get("id", ""))
+
+    user_id = meta.get("custom_data", {}).get("user_id")
+
+    # Check if this is a dev_addon cancellation
+    if LS_VARIANT_DEV_ADDON:
+        addon_record = sub_repo.get_by_ls_dev_addon_subscription(ls_sub_id)
+        if addon_record:
+            sub_repo.upsert_subscription(addon_record["user_id"], {
+                "dev_addon":                    False,
+                "ls_dev_addon_subscription_id": None,
+            })
+            logger.info(f"User {addon_record['user_id']} dev_addon cancelled → revoked")
+            return
 
     if not user_id:
         record = sub_repo.get_by_ls_subscription(ls_sub_id)

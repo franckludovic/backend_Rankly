@@ -51,6 +51,14 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     logger.info("Starting SEO Suggestion Engine API...")
     registry.load()
+    # Warm up the CC graph connection on the main thread so the first user
+    # request doesn't pay the ~14s cold-start penalty.
+    try:
+        from services.cc_graph import lookup_domain as _cc_warmup
+        _cc_warmup("google.com")
+        logger.info("CC graph warmed up")
+    except Exception as e:
+        logger.warning(f"CC graph warmup skipped: {e}")
     try:
         from services.scheduler import start_scheduler, stop_scheduler
         start_scheduler()

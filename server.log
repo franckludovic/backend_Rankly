@@ -11068,3 +11068,664 @@
 2026-06-23 15:02:50,649 [watchfiles.main] INFO - 3 changes detected
 2026-06-23 15:02:51,001 [watchfiles.main] INFO - 2 changes detected
 2026-06-23 15:02:55,805 [watchfiles.main] INFO - 4 changes detected
+2026-06-24 07:58:35,872 [main] INFO - Starting SEO Suggestion Engine API...
+2026-06-24 07:58:35,873 [models.model_registry] INFO - Loading models...
+2026-06-24 07:58:44,840 [models.model_registry] INFO - ✓ Classification model loaded: xgb_classifier_V6.joblib
+2026-06-24 07:58:44,868 [models.model_registry] INFO - ✓ Regression model loaded: xgb_regressorV6.joblib
+2026-06-24 07:59:23,152 [sentence_transformers.base.model] INFO - No device provided, using cpu
+2026-06-24 07:59:23,163 [sentence_transformers.base.model] INFO - Loading SentenceTransformer model from C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\models\semantic_model.
+2026-06-24 07:59:23,696 [models.model_registry] INFO - ✓ Semantic model loaded from: C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\models\semantic_model
+2026-06-24 07:59:23,696 [models.model_registry] INFO - Models ready- clf_features=51  reg_features=97  semantic=✓
+2026-06-24 07:59:23,788 [watchfiles.main] INFO - 5 changes detected
+2026-06-24 07:59:23,868 [apscheduler.scheduler] INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-24 07:59:23,869 [apscheduler.scheduler] INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-24 07:59:23,871 [apscheduler.scheduler] INFO - Added job "_run_due_audits" to job store "default"
+2026-06-24 07:59:23,872 [apscheduler.scheduler] INFO - Added job "_run_competitor_checks" to job store "default"
+2026-06-24 07:59:23,872 [apscheduler.scheduler] INFO - Scheduler started
+2026-06-24 07:59:23,873 [services.scheduler] INFO - APScheduler started- audits every 6 h · competitor checks weekly
+2026-06-24 07:59:23,873 [main] INFO - API ready
+2026-06-24 07:59:33,107 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 07:59:36,761 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=id%2Curl%2Ckeyword%2Ccreated_at%2Cresponse&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&order=created_at.desc "HTTP/2 200 OK"
+2026-06-24 07:59:38,641 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 07:59:39,097 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/watched_competitors?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&order=created_at.desc "HTTP/2 200 OK"
+2026-06-24 07:59:40,061 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 07:59:40,365 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=id%2Curl%2Ckeyword%2Ccreated_at%2Cresponse&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&order=created_at.desc "HTTP/2 200 OK"
+2026-06-24 07:59:40,874 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 07:59:41,380 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&order=created_at.desc&offset=0&limit=50 "HTTP/2 200 OK"
+2026-06-24 07:59:41,880 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 07:59:42,370 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/watched_competitors?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&order=created_at.desc "HTTP/2 200 OK"
+2026-06-24 07:59:42,700 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 07:59:43,018 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&order=created_at.desc&offset=0&limit=50 "HTTP/2 200 OK"
+2026-06-24 07:59:43,388 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 07:59:43,740 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/usage_events?select=id&idempotency_key=eq.app_7a54d0da-95d7-4c0a-8a23-0a3076f2f825_0a2413b9-4e08-4b55-ba31-525ba3792599 "HTTP/2 200 OK"
+2026-06-24 07:59:44,057 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/subscriptions?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825 "HTTP/2 200 OK"
+2026-06-24 07:59:44,061 [storage.subscription_repository] WARNING - Could not fetch plan for 7a54d0da-95d7-4c0a-8a23-0a3076f2f825: 'NoneType' object has no attribute 'data'
+2026-06-24 07:59:44,386 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/usage_events?select=id&subject_type=eq.user&subject_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&product=eq.main_app&mode=eq.online&consumed_at=gte.2026-06-01T00%3A00%3A00%2B00%3A00 "HTTP/2 200 OK"
+2026-06-24 07:59:44,751 [httpx] INFO - HTTP Request: POST https://znywqauheovonqltvjhy.supabase.co/rest/v1/usage_events "HTTP/2 201 Created"
+2026-06-24 07:59:56,562 [httpx] INFO - HTTP Request: GET https://openpagerank.com/api/v1.0/getPageRank?domains%5B%5D=design.com "HTTP/1.1 200 OK"
+2026-06-24 07:59:58,996 [httpx] INFO - HTTP Request: GET https://index.commoncrawl.org/CC-MAIN-2024-10-index?url=%2A.design.com&output=json&limit=1&fl=urlkey "HTTP/1.1 200 OK"
+2026-06-24 08:00:15,317 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 08:00:18,709 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=%2A&id=eq.339fce18-703a-4638-9aba-a6963a6545b3&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825 "HTTP/2 200 OK"
+2026-06-24 08:00:19,824 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/roadmap_tasks?select=%2A&audit_id=eq.339fce18-703a-4638-9aba-a6963a6545b3 "HTTP/2 200 OK"
+2026-06-24 08:00:19,993 [httpx] INFO - HTTP Request: GET https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=https%3A%2F%2Fwww.design.com%2F&key=AIzaSyAC-ZtMaH3tlbZJJR0iAmdYel4Ghg9EunM&strategy=mobile&category=seo "HTTP/1.1 200 OK"
+2026-06-24 08:00:20,340 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 08:00:20,901 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=%2A&id=eq.339fce18-703a-4638-9aba-a6963a6545b3&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825 "HTTP/2 200 OK"
+2026-06-24 08:00:21,243 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/roadmap_tasks?select=%2A&audit_id=eq.339fce18-703a-4638-9aba-a6963a6545b3 "HTTP/2 200 OK"
+2026-06-24 08:00:23,226 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 08:00:23,731 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/scheduled_audits?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&url=eq.https%3A%2F%2Fwww.magicpattern.design%2F&keyword=eq.designs&limit=1 "HTTP/2 200 OK"
+2026-06-24 08:00:25,207 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 08:00:26,267 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=id%2Ccreated_at%2Cresponse&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&url=eq.https%3A%2F%2Fwww.magicpattern.design%2F&keyword=eq.designs&order=created_at.asc "HTTP/2 200 OK"
+2026-06-24 08:00:29,958 [httpx] INFO - HTTP Request: POST https://google.serper.dev/search "HTTP/1.1 200 OK"
+2026-06-24 08:00:30,936 [services.serp_competitor] INFO - Serper: 10 competitor URLs, 0 SERP features for 'Design'
+2026-06-24 08:00:37,312 [httpx] INFO - HTTP Request: GET https://design-milk.com/ "HTTP/1.1 200 OK"
+2026-06-24 08:00:37,315 [httpx] INFO - HTTP Request: GET https://www.designworldonline.com/ "HTTP/1.1 403 Forbidden"
+2026-06-24 08:00:38,127 [httpx] INFO - HTTP Request: GET https://dictionary.cambridge.org/us/dictionary/english/design "HTTP/1.1 200 OK"
+2026-06-24 08:00:38,520 [httpx] INFO - HTTP Request: GET https://en.wikipedia.org/wiki/Design "HTTP/1.1 403 Forbidden"
+2026-06-24 08:00:38,521 [services.serp_competitor] INFO - JS-render fallback (Playwright): https://en.wikipedia.org/wiki/Design
+2026-06-24 08:00:38,708 [asyncio] ERROR - Task exception was never retrieved
+future: <Task finished name='Task-49' coro=<Connection.run() done, defined at C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_connection.py:305> exception=NotImplementedError()>
+Traceback (most recent call last):
+  File "C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_connection.py", line 312, in run
+    await self._transport.connect()
+  File "C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_transport.py", line 133, in connect
+    raise exc
+  File "C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_transport.py", line 120, in connect
+    self._proc = await asyncio.create_subprocess_exec(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<9 lines>...
+    )
+    ^
+  File "C:\Users\Metatron\AppData\Local\Programs\Python\Python313\Lib\asyncio\subprocess.py", line 224, in create_subprocess_exec
+    transport, protocol = await loop.subprocess_exec(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        stderr=stderr, **kwds)
+        ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Metatron\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 1787, in subprocess_exec
+    transport = await self._make_subprocess_transport(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        protocol, popen_args, False, stdin, stdout, stderr,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        bufsize, **kwargs)
+        ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Metatron\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 534, in _make_subprocess_transport
+    raise NotImplementedError
+NotImplementedError
+2026-06-24 08:00:39,733 [httpx] INFO - HTTP Request: GET https://www.designboom.com/design/ "HTTP/1.1 200 OK"
+2026-06-24 08:00:41,295 [httpx] INFO - HTTP Request: GET https://www.design.com/ "HTTP/1.1 200 OK"
+2026-06-24 08:00:41,983 [httpx] INFO - HTTP Request: GET https://www.merriam-webster.com/dictionary/design "HTTP/1.1 403 Forbidden"
+2026-06-24 08:00:44,753 [httpx] INFO - HTTP Request: GET https://order.design/ "HTTP/1.1 200 OK"
+2026-06-24 08:00:45,299 [services.serp_competitor] INFO - JS-render fallback (Playwright): https://www.designworldonline.com/
+2026-06-24 08:00:45,299 [asyncio] ERROR - Task exception was never retrieved
+future: <Task finished name='Task-50' coro=<Connection.run() done, defined at C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_connection.py:305> exception=NotImplementedError()>
+Traceback (most recent call last):
+  File "C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_connection.py", line 312, in run
+    await self._transport.connect()
+  File "C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_transport.py", line 133, in connect
+    raise exc
+  File "C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_transport.py", line 120, in connect
+    self._proc = await asyncio.create_subprocess_exec(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<9 lines>...
+    )
+    ^
+  File "C:\Users\Metatron\AppData\Local\Programs\Python\Python313\Lib\asyncio\subprocess.py", line 224, in create_subprocess_exec
+    transport, protocol = await loop.subprocess_exec(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        stderr=stderr, **kwds)
+        ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Metatron\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 1787, in subprocess_exec
+    transport = await self._make_subprocess_transport(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        protocol, popen_args, False, stdin, stdout, stderr,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        bufsize, **kwargs)
+        ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Metatron\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 534, in _make_subprocess_transport
+    raise NotImplementedError
+NotImplementedError
+2026-06-24 08:00:47,104 [services.serp_competitor] INFO - JS-render fallback (Playwright): https://www.merriam-webster.com/dictionary/design
+2026-06-24 08:00:47,104 [asyncio] ERROR - Task exception was never retrieved
+future: <Task finished name='Task-51' coro=<Connection.run() done, defined at C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_connection.py:305> exception=NotImplementedError()>
+Traceback (most recent call last):
+  File "C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_connection.py", line 312, in run
+    await self._transport.connect()
+  File "C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_transport.py", line 133, in connect
+    raise exc
+  File "C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_transport.py", line 120, in connect
+    self._proc = await asyncio.create_subprocess_exec(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<9 lines>...
+    )
+    ^
+  File "C:\Users\Metatron\AppData\Local\Programs\Python\Python313\Lib\asyncio\subprocess.py", line 224, in create_subprocess_exec
+    transport, protocol = await loop.subprocess_exec(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        stderr=stderr, **kwds)
+        ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Metatron\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 1787, in subprocess_exec
+    transport = await self._make_subprocess_transport(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        protocol, popen_args, False, stdin, stdout, stderr,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        bufsize, **kwargs)
+        ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Metatron\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 534, in _make_subprocess_transport
+    raise NotImplementedError
+NotImplementedError
+2026-06-24 08:00:47,145 [services.serp_competitor] INFO - JS-render fallback (Playwright): https://www.youtube.com/watch?v=gKDK5QFheSQ
+2026-06-24 08:00:47,145 [asyncio] ERROR - Task exception was never retrieved
+future: <Task finished name='Task-52' coro=<Connection.run() done, defined at C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_connection.py:305> exception=NotImplementedError()>
+Traceback (most recent call last):
+  File "C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_connection.py", line 312, in run
+    await self._transport.connect()
+  File "C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_transport.py", line 133, in connect
+    raise exc
+  File "C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_transport.py", line 120, in connect
+    self._proc = await asyncio.create_subprocess_exec(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<9 lines>...
+    )
+    ^
+  File "C:\Users\Metatron\AppData\Local\Programs\Python\Python313\Lib\asyncio\subprocess.py", line 224, in create_subprocess_exec
+    transport, protocol = await loop.subprocess_exec(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        stderr=stderr, **kwds)
+        ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Metatron\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 1787, in subprocess_exec
+    transport = await self._make_subprocess_transport(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        protocol, popen_args, False, stdin, stdout, stderr,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        bufsize, **kwargs)
+        ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Metatron\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 534, in _make_subprocess_transport
+    raise NotImplementedError
+NotImplementedError
+2026-06-24 08:00:47,191 [services.serp_competitor] INFO - JS-render fallback (Playwright): https://www.figma.com/design/
+2026-06-24 08:00:47,192 [asyncio] ERROR - Task exception was never retrieved
+future: <Task finished name='Task-53' coro=<Connection.run() done, defined at C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_connection.py:305> exception=NotImplementedError()>
+Traceback (most recent call last):
+  File "C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_connection.py", line 312, in run
+    await self._transport.connect()
+  File "C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_transport.py", line 133, in connect
+    raise exc
+  File "C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_transport.py", line 120, in connect
+    self._proc = await asyncio.create_subprocess_exec(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<9 lines>...
+    )
+    ^
+  File "C:\Users\Metatron\AppData\Local\Programs\Python\Python313\Lib\asyncio\subprocess.py", line 224, in create_subprocess_exec
+    transport, protocol = await loop.subprocess_exec(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        stderr=stderr, **kwds)
+        ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Metatron\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 1787, in subprocess_exec
+    transport = await self._make_subprocess_transport(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        protocol, popen_args, False, stdin, stdout, stderr,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        bufsize, **kwargs)
+        ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Metatron\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 534, in _make_subprocess_transport
+    raise NotImplementedError
+NotImplementedError
+2026-06-24 08:00:48,676 [httpx] INFO - HTTP Request: GET https://index.commoncrawl.org/CC-MAIN-2024-10-index?url=%2A.design-milk.com&output=json&limit=1&fl=urlkey "HTTP/1.1 200 OK"
+2026-06-24 08:00:49,956 [httpx] INFO - HTTP Request: GET https://index.commoncrawl.org/CC-MAIN-2024-10-index?url=%2A.design.com&output=json&limit=1&fl=urlkey "HTTP/1.1 200 OK"
+2026-06-24 08:00:50,734 [httpx] INFO - HTTP Request: GET https://index.commoncrawl.org/CC-MAIN-2024-10-index?url=%2A.order.design&output=json&limit=1&fl=urlkey "HTTP/1.1 200 OK"
+2026-06-24 08:00:51,322 [services.serp_competitor] INFO - JS-render fallback (Playwright): https://dictionary.cambridge.org/us/dictionary/english/design
+2026-06-24 08:00:51,323 [asyncio] ERROR - Task exception was never retrieved
+future: <Task finished name='Task-54' coro=<Connection.run() done, defined at C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_connection.py:305> exception=NotImplementedError()>
+Traceback (most recent call last):
+  File "C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_connection.py", line 312, in run
+    await self._transport.connect()
+  File "C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_transport.py", line 133, in connect
+    raise exc
+  File "C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_transport.py", line 120, in connect
+    self._proc = await asyncio.create_subprocess_exec(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<9 lines>...
+    )
+    ^
+  File "C:\Users\Metatron\AppData\Local\Programs\Python\Python313\Lib\asyncio\subprocess.py", line 224, in create_subprocess_exec
+    transport, protocol = await loop.subprocess_exec(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        stderr=stderr, **kwds)
+        ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Metatron\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 1787, in subprocess_exec
+    transport = await self._make_subprocess_transport(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        protocol, popen_args, False, stdin, stdout, stderr,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        bufsize, **kwargs)
+        ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Metatron\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 534, in _make_subprocess_transport
+    raise NotImplementedError
+NotImplementedError
+2026-06-24 08:00:55,677 [services.serp_competitor] INFO - JS-render fallback (Playwright): https://www.designboom.com/design/
+2026-06-24 08:00:55,678 [asyncio] ERROR - Task exception was never retrieved
+future: <Task finished name='Task-55' coro=<Connection.run() done, defined at C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_connection.py:305> exception=NotImplementedError()>
+Traceback (most recent call last):
+  File "C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_connection.py", line 312, in run
+    await self._transport.connect()
+  File "C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_transport.py", line 133, in connect
+    raise exc
+  File "C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\venv\Lib\site-packages\playwright\_impl\_transport.py", line 120, in connect
+    self._proc = await asyncio.create_subprocess_exec(
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<9 lines>...
+    )
+    ^
+  File "C:\Users\Metatron\AppData\Local\Programs\Python\Python313\Lib\asyncio\subprocess.py", line 224, in create_subprocess_exec
+    transport, protocol = await loop.subprocess_exec(
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+        stderr=stderr, **kwds)
+        ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Metatron\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 1787, in subprocess_exec
+    transport = await self._make_subprocess_transport(
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        protocol, popen_args, False, stdin, stdout, stderr,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        bufsize, **kwargs)
+        ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\Metatron\AppData\Local\Programs\Python\Python313\Lib\asyncio\base_events.py", line 534, in _make_subprocess_transport
+    raise NotImplementedError
+NotImplementedError
+2026-06-24 08:00:57,095 [httpx] INFO - HTTP Request: GET https://openpagerank.com/api/v1.0/getPageRank?domains%5B%5D=design.com&domains%5B%5D=design-milk.com&domains%5B%5D=order.design "HTTP/1.1 200 OK"
+2026-06-24 08:00:57,096 [services.serp_competitor] INFO - Competitors scraped: 3/10 succeeded
+2026-06-24 08:00:57,105 [services.serp_cache] INFO - Cached 3 competitors for keyword: 'design'
+2026-06-24 08:00:57,181 [watchfiles.main] INFO - 4 changes detected
+2026-06-24 08:00:58,519 [httpx] INFO - HTTP Request: POST https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits "HTTP/2 201 Created"
+2026-06-24 08:00:58,915 [httpx] INFO - HTTP Request: POST https://znywqauheovonqltvjhy.supabase.co/rest/v1/roadmap_tasks?columns=%22task_data%22%2C%22audit_id%22%2C%22status%22 "HTTP/2 201 Created"
+2026-06-24 08:01:02,833 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 08:01:03,175 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=id%2Ccreated_at%2Cresponse&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&url=eq.https%3A%2F%2Fwww.design.com%2F&keyword=eq.Design&order=created_at.asc "HTTP/2 200 OK"
+2026-06-24 08:01:03,296 [watchfiles.main] INFO - 1 change detected
+2026-06-24 08:01:03,492 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 08:01:03,824 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/scheduled_audits?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&url=eq.https%3A%2F%2Fwww.design.com%2F&keyword=eq.Design&limit=1 "HTTP/2 200 OK"
+2026-06-24 08:01:05,278 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 08:01:05,609 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=id%2Curl%2Ckeyword%2Ccreated_at%2Cresponse&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&order=created_at.desc "HTTP/2 200 OK"
+2026-06-24 08:01:05,947 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 08:01:06,280 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/watched_competitors?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&order=created_at.desc "HTTP/2 200 OK"
+2026-06-24 08:01:06,621 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 08:01:06,943 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&order=created_at.desc&offset=0&limit=50 "HTTP/2 200 OK"
+2026-06-24 08:01:07,264 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 08:01:07,659 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=id%2Curl%2Ckeyword%2Ccreated_at%2Cresponse&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&order=created_at.desc "HTTP/2 200 OK"
+2026-06-24 08:01:09,704 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 08:01:18,295 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 08:01:19,148 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/watched_competitors?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&order=created_at.desc "HTTP/2 200 OK"
+2026-06-24 08:01:19,472 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 08:01:19,801 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=id%2Ccreated_at%2Cresponse&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&url=eq.https%3A%2F%2Fwww.design.com%2F&keyword=eq.Design&order=created_at.asc "HTTP/2 200 OK"
+2026-06-24 08:01:20,130 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 08:01:20,449 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/scheduled_audits?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&url=eq.https%3A%2F%2Fwww.design.com%2F&keyword=eq.Design&limit=1 "HTTP/2 200 OK"
+2026-06-24 08:01:20,774 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 08:01:21,097 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&order=created_at.desc&offset=0&limit=50 "HTTP/2 200 OK"
+2026-06-24 08:01:45,823 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 08:01:47,060 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/watched_competitors?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&competitor_url=eq.https%3A%2F%2Fdesign-milk.com%2F&keyword=eq.Design "HTTP/2 200 OK"
+2026-06-24 08:01:47,512 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 08:01:47,915 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/watched_competitors?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&competitor_url=eq.https%3A%2F%2Forder.design%2F&keyword=eq.Design "HTTP/2 200 OK"
+2026-06-24 08:01:48,248 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 08:01:48,640 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/watched_competitors?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&competitor_url=eq.https%3A%2F%2Fdesign-milk.com%2F&keyword=eq.Design "HTTP/2 200 OK"
+2026-06-24 08:01:49,096 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 08:01:49,413 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/watched_competitors?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&competitor_url=eq.https%3A%2F%2Forder.design%2F&keyword=eq.Design "HTTP/2 200 OK"
+2026-06-24 08:02:49,709 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 08:02:51,032 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&order=created_at.desc&offset=0&limit=50 "HTTP/2 200 OK"
+2026-06-24 08:02:51,612 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 08:02:53,669 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&order=created_at.desc&offset=0&limit=50 "HTTP/2 200 OK"
+2026-06-24 08:03:10,806 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 08:03:11,498 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=id%2Ccreated_at%2Cresponse&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&url=eq.https%3A%2F%2Fwww.design.com%2F&keyword=eq.Design&order=created_at.asc "HTTP/2 200 OK"
+2026-06-24 08:03:11,816 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 08:03:12,242 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/scheduled_audits?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&url=eq.https%3A%2F%2Fwww.design.com%2F&keyword=eq.Design&limit=1 "HTTP/2 200 OK"
+2026-06-24 08:07:05,861 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 08:07:05,957 [watchfiles.main] INFO - 5 changes detected
+2026-06-24 08:07:07,809 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=%2A&id=eq.b615b831-c6b5-491b-8d98-7852c6beae07&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825 "HTTP/2 200 OK"
+2026-06-24 08:07:13,369 [google_genai.models] INFO - AFC is enabled with max remote calls: 10.
+2026-06-24 08:07:15,482 [httpx] INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 429 Too Many Requests"
+2026-06-24 08:07:15,782 [api.routes_audit] ERROR - Brief generation failed for audit b615b831-c6b5-491b-8d98-7852c6beae07: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.0-flash\n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.0-flash\nPlease retry in 45.352292557s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-2.0-flash', 'location': 'global'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-2.0-flash'}}, {'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_input_token_count', 'quotaId': 'GenerateContentInputTokensPerModelPerMinute-FreeTier', 'quotaDimensions': {'model': 'gemini-2.0-flash', 'location': 'global'}}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '45s'}]}}
+2026-06-24 08:17:22,871 [watchfiles.main] INFO - 1 change detected
+2026-06-24 08:17:28,548 [watchfiles.main] INFO - 4 changes detected
+2026-06-24 11:30:53,697 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:30:58,085 [watchfiles.main] INFO - 4 changes detected
+2026-06-24 11:33:58,626 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:34:01,406 [watchfiles.main] INFO - 4 changes detected
+2026-06-24 11:47:31,073 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:47:39,712 [watchfiles.main] INFO - 4 changes detected
+2026-06-24 11:47:43,179 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:47:49,245 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:47:52,151 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:48:06,670 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:48:38,038 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:48:39,258 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:48:43,859 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:48:47,756 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:48:49,490 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:49:04,529 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:49:06,178 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:49:07,307 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:49:15,918 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:49:17,983 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:49:19,686 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:49:22,318 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:49:25,416 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:49:33,634 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:49:36,265 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:50:26,760 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:50:30,042 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:50:32,234 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:50:35,463 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:50:38,468 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:50:39,987 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:50:40,642 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:50:43,578 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:50:45,273 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:50:47,248 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:50:48,965 [watchfiles.main] INFO - 4 changes detected
+2026-06-24 11:50:49,321 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:50:52,463 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:50:56,404 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:50:58,524 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:51:01,740 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:52:57,034 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:52:59,973 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:53:03,080 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:53:04,845 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:53:06,511 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:53:07,972 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:53:10,548 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:53:17,812 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:53:20,638 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:53:23,165 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:53:24,491 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:53:26,162 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:53:49,187 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:53:55,113 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 11:53:55,467 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:55:40,917 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:56:55,410 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:56:59,443 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 11:56:59,808 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:59:31,529 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:59:32,813 [watchfiles.main] INFO - 1 change detected
+2026-06-24 11:59:59,651 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:00:00,009 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:00:04,957 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:00:07,793 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:00:09,993 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:00:10,572 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 12:00:10,941 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:00:11,708 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:00:13,544 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:00:21,392 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:00:22,002 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:00:34,529 [services.scheduler] INFO - APScheduler stopped
+2026-06-24 12:00:34,530 [main] INFO - API shutting down
+2026-06-24 12:00:34,537 [apscheduler.scheduler] INFO - Scheduler has been shut down
+2026-06-24 12:00:50,328 [main] INFO - Starting SEO Suggestion Engine API...
+2026-06-24 12:00:50,328 [models.model_registry] INFO - Loading models...
+2026-06-24 12:00:53,021 [models.model_registry] INFO - ✓ Classification model loaded: xgb_classifier_V6.joblib
+2026-06-24 12:00:53,034 [models.model_registry] INFO - ✓ Regression model loaded: xgb_regressorV6.joblib
+2026-06-24 12:01:06,069 [sentence_transformers.base.model] INFO - No device provided, using cpu
+2026-06-24 12:01:06,071 [sentence_transformers.base.model] INFO - Loading SentenceTransformer model from C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\models\semantic_model.
+2026-06-24 12:01:06,386 [models.model_registry] INFO - ✓ Semantic model loaded from: C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\models\semantic_model
+2026-06-24 12:01:06,387 [models.model_registry] INFO - Models ready- clf_features=51  reg_features=97  semantic=✓
+2026-06-24 12:01:06,508 [apscheduler.scheduler] INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-24 12:01:06,508 [apscheduler.scheduler] INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-24 12:01:06,510 [apscheduler.scheduler] INFO - Added job "_run_due_audits" to job store "default"
+2026-06-24 12:01:06,510 [apscheduler.scheduler] INFO - Added job "_run_competitor_checks" to job store "default"
+2026-06-24 12:01:06,510 [apscheduler.scheduler] INFO - Scheduler started
+2026-06-24 12:01:06,511 [services.scheduler] INFO - APScheduler started- audits every 6 h · competitor checks weekly
+2026-06-24 12:01:06,511 [main] INFO - API ready
+2026-06-24 12:01:32,143 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:01:35,658 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=%2A&id=eq.b615b831-c6b5-491b-8d98-7852c6beae07&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825 "HTTP/2 200 OK"
+2026-06-24 12:01:36,084 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/roadmap_tasks?select=%2A&audit_id=eq.b615b831-c6b5-491b-8d98-7852c6beae07 "HTTP/2 200 OK"
+2026-06-24 12:01:37,550 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:01:37,900 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=%2A&id=eq.b615b831-c6b5-491b-8d98-7852c6beae07&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825 "HTTP/2 200 OK"
+2026-06-24 12:01:38,500 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/roadmap_tasks?select=%2A&audit_id=eq.b615b831-c6b5-491b-8d98-7852c6beae07 "HTTP/2 200 OK"
+2026-06-24 12:01:41,213 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:01:41,541 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=id%2Ccreated_at%2Cresponse&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&url=eq.https%3A%2F%2Fwww.design.com%2F&keyword=eq.Design&order=created_at.asc "HTTP/2 200 OK"
+2026-06-24 12:01:42,063 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:01:42,411 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/scheduled_audits?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&url=eq.https%3A%2F%2Fwww.design.com%2F&keyword=eq.Design&limit=1 "HTTP/2 200 OK"
+2026-06-24 12:01:42,739 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:01:43,772 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=%2A&id=eq.b615b831-c6b5-491b-8d98-7852c6beae07&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825 "HTTP/2 200 OK"
+2026-06-24 12:01:47,444 [google_genai.models] INFO - AFC is enabled with max remote calls: 10.
+2026-06-24 12:01:53,148 [httpx] INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 401 Unauthorized"
+2026-06-24 12:01:53,151 [api.routes_audit] ERROR - Brief generation failed for audit b615b831-c6b5-491b-8d98-7852c6beae07: 401 UNAUTHENTICATED. {'error': {'code': 401, 'message': 'Request had invalid authentication credentials. Expected OAuth 2 access token, login cookie or other valid authentication credential. See https://developers.google.com/identity/sign-in/web/devconsole-project.', 'status': 'UNAUTHENTICATED', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'ACCESS_TOKEN_TYPE_UNSUPPORTED', 'metadata': {'method': 'google.ai.generativelanguage.v1beta.GenerativeService.GenerateContent', 'service': 'generativelanguage.googleapis.com'}}]}}
+2026-06-24 12:03:10,921 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:03:13,761 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 12:03:14,127 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:06:14,060 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:06:18,651 [watchfiles.main] INFO - 4 changes detected
+2026-06-24 12:09:18,878 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:09:22,458 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 12:09:22,821 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:12:22,763 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:12:25,497 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 12:12:25,853 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:12:51,716 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:12:52,328 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:12:54,672 [services.scheduler] INFO - APScheduler stopped
+2026-06-24 12:12:54,672 [main] INFO - API shutting down
+2026-06-24 12:12:54,673 [apscheduler.scheduler] INFO - Scheduler has been shut down
+2026-06-24 12:13:09,316 [main] INFO - Starting SEO Suggestion Engine API...
+2026-06-24 12:13:09,317 [models.model_registry] INFO - Loading models...
+2026-06-24 12:13:11,726 [models.model_registry] INFO - ✓ Classification model loaded: xgb_classifier_V6.joblib
+2026-06-24 12:13:11,737 [models.model_registry] INFO - ✓ Regression model loaded: xgb_regressorV6.joblib
+2026-06-24 12:13:23,261 [sentence_transformers.base.model] INFO - No device provided, using cpu
+2026-06-24 12:13:23,262 [sentence_transformers.base.model] INFO - Loading SentenceTransformer model from C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\models\semantic_model.
+2026-06-24 12:13:23,617 [models.model_registry] INFO - ✓ Semantic model loaded from: C:\Users\Metatron\Desktop\a SEO Suggestion Search Engine Using Machine Learning\SEO_Implementation\Rankly\backend\models\semantic_model
+2026-06-24 12:13:23,617 [models.model_registry] INFO - Models ready- clf_features=51  reg_features=97  semantic=✓
+2026-06-24 12:13:23,741 [apscheduler.scheduler] INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-24 12:13:23,741 [apscheduler.scheduler] INFO - Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-06-24 12:13:23,743 [apscheduler.scheduler] INFO - Added job "_run_due_audits" to job store "default"
+2026-06-24 12:13:23,743 [apscheduler.scheduler] INFO - Added job "_run_competitor_checks" to job store "default"
+2026-06-24 12:13:23,744 [apscheduler.scheduler] INFO - Scheduler started
+2026-06-24 12:13:23,744 [services.scheduler] INFO - APScheduler started- audits every 6 h · competitor checks weekly
+2026-06-24 12:13:23,744 [main] INFO - API ready
+2026-06-24 12:14:49,953 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:14:52,918 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=%2A&id=eq.b615b831-c6b5-491b-8d98-7852c6beae07&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825 "HTTP/2 200 OK"
+2026-06-24 12:14:53,278 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/roadmap_tasks?select=%2A&audit_id=eq.b615b831-c6b5-491b-8d98-7852c6beae07 "HTTP/2 200 OK"
+2026-06-24 12:14:53,756 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:14:54,115 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=%2A&id=eq.b615b831-c6b5-491b-8d98-7852c6beae07&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825 "HTTP/2 200 OK"
+2026-06-24 12:14:54,473 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/roadmap_tasks?select=%2A&audit_id=eq.b615b831-c6b5-491b-8d98-7852c6beae07 "HTTP/2 200 OK"
+2026-06-24 12:14:54,877 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:14:55,998 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=id%2Ccreated_at%2Cresponse&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&url=eq.https%3A%2F%2Fwww.design.com%2F&keyword=eq.Design&order=created_at.asc "HTTP/2 200 OK"
+2026-06-24 12:14:56,410 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:14:56,968 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/scheduled_audits?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&url=eq.https%3A%2F%2Fwww.design.com%2F&keyword=eq.Design&limit=1 "HTTP/2 200 OK"
+2026-06-24 12:15:01,566 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:15:02,060 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=%2A&id=eq.b615b831-c6b5-491b-8d98-7852c6beae07&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825 "HTTP/2 200 OK"
+2026-06-24 12:15:05,579 [google_genai.models] INFO - AFC is enabled with max remote calls: 10.
+2026-06-24 12:15:06,978 [httpx] INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 401 Unauthorized"
+2026-06-24 12:15:06,979 [api.routes_audit] ERROR - Brief generation failed for audit b615b831-c6b5-491b-8d98-7852c6beae07: 401 UNAUTHENTICATED. {'error': {'code': 401, 'message': 'Request had invalid authentication credentials. Expected OAuth 2 access token, login cookie or other valid authentication credential. See https://developers.google.com/identity/sign-in/web/devconsole-project.', 'status': 'UNAUTHENTICATED', 'details': [{'@type': 'type.googleapis.com/google.rpc.ErrorInfo', 'reason': 'ACCESS_TOKEN_TYPE_UNSUPPORTED', 'metadata': {'method': 'google.ai.generativelanguage.v1beta.GenerativeService.GenerateContent', 'service': 'generativelanguage.googleapis.com'}}]}}
+2026-06-24 12:15:25,818 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:15:29,602 [watchfiles.main] INFO - 4 changes detected
+2026-06-24 12:28:39,753 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:28:42,365 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=%2A&id=eq.b615b831-c6b5-491b-8d98-7852c6beae07&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825 "HTTP/2 200 OK"
+2026-06-24 12:28:42,684 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/roadmap_tasks?select=%2A&audit_id=eq.b615b831-c6b5-491b-8d98-7852c6beae07 "HTTP/2 200 OK"
+2026-06-24 12:28:43,122 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:28:43,552 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=%2A&id=eq.b615b831-c6b5-491b-8d98-7852c6beae07&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825 "HTTP/2 200 OK"
+2026-06-24 12:28:45,212 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/roadmap_tasks?select=%2A&audit_id=eq.b615b831-c6b5-491b-8d98-7852c6beae07 "HTTP/2 200 OK"
+2026-06-24 12:28:45,754 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:28:46,180 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=id%2Ccreated_at%2Cresponse&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&url=eq.https%3A%2F%2Fwww.design.com%2F&keyword=eq.Design&order=created_at.asc "HTTP/2 200 OK"
+2026-06-24 12:28:46,517 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:28:47,576 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/scheduled_audits?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&url=eq.https%3A%2F%2Fwww.design.com%2F&keyword=eq.Design&limit=1 "HTTP/2 200 OK"
+2026-06-24 12:28:53,099 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:28:55,675 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&order=created_at.desc&offset=0&limit=50 "HTTP/2 200 OK"
+2026-06-24 12:28:57,095 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:28:57,435 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&order=created_at.desc&offset=0&limit=50 "HTTP/2 200 OK"
+2026-06-24 12:28:58,928 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:28:59,991 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/watched_competitors?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&order=created_at.desc "HTTP/2 200 OK"
+2026-06-24 12:29:00,620 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:29:01,059 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=id%2Curl%2Ckeyword%2Ccreated_at%2Cresponse&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&order=created_at.desc "HTTP/2 200 OK"
+2026-06-24 12:29:01,541 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:29:02,077 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/watched_competitors?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&order=created_at.desc "HTTP/2 200 OK"
+2026-06-24 12:29:03,090 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:29:03,442 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&order=created_at.desc&offset=0&limit=50 "HTTP/2 200 OK"
+2026-06-24 12:29:05,150 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:29:05,691 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=id%2Ccreated_at%2Cresponse&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&url=eq.https%3A%2F%2Fwww.design.com%2F&keyword=eq.Design&order=created_at.asc "HTTP/2 200 OK"
+2026-06-24 12:29:07,392 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:29:07,956 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=id%2Curl%2Ckeyword%2Ccreated_at%2Cresponse&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&order=created_at.desc "HTTP/2 200 OK"
+2026-06-24 12:29:08,304 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:29:08,866 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/scheduled_audits?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&url=eq.https%3A%2F%2Fwww.design.com%2F&keyword=eq.Design&limit=1 "HTTP/2 200 OK"
+2026-06-24 12:29:09,435 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:29:09,880 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/watched_competitors?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&competitor_url=eq.https%3A%2F%2Fdesign-milk.com%2F&keyword=eq.Design "HTTP/2 200 OK"
+2026-06-24 12:29:11,041 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:29:11,617 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/watched_competitors?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&competitor_url=eq.https%3A%2F%2Forder.design%2F&keyword=eq.Design "HTTP/2 200 OK"
+2026-06-24 12:29:12,356 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:29:12,716 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&order=created_at.desc&offset=0&limit=50 "HTTP/2 200 OK"
+2026-06-24 12:29:15,190 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:29:15,545 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/watched_competitors?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&competitor_url=eq.https%3A%2F%2Forder.design%2F&keyword=eq.Design "HTTP/2 200 OK"
+2026-06-24 12:29:17,006 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:29:17,417 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/watched_competitors?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&competitor_url=eq.https%3A%2F%2Fdesign-milk.com%2F&keyword=eq.Design "HTTP/2 200 OK"
+2026-06-24 12:29:17,987 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:29:18,375 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/audits?select=id%2Ccreated_at%2Cresponse&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&url=eq.https%3A%2F%2Fwww.design.com%2F&keyword=eq.Design&order=created_at.asc "HTTP/2 200 OK"
+2026-06-24 12:29:18,761 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/auth/v1/user "HTTP/2 200 OK"
+2026-06-24 12:29:19,321 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/scheduled_audits?select=%2A&user_id=eq.7a54d0da-95d7-4c0a-8a23-0a3076f2f825&url=eq.https%3A%2F%2Fwww.design.com%2F&keyword=eq.Design&limit=1 "HTTP/2 200 OK"
+2026-06-24 12:32:08,671 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:32:12,720 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 12:32:13,074 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:32:34,592 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:32:37,798 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:32:42,098 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:32:47,768 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:32:52,451 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:32:54,761 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:32:58,555 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:32:59,939 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:33:10,287 [watchfiles.main] INFO - 1 change detected
+2026-06-24 12:33:11,963 [watchfiles.main] INFO - 1 change detected
+2026-06-24 14:39:52,058 [watchfiles.main] INFO - 1 change detected
+2026-06-24 14:39:53,952 [watchfiles.main] INFO - 1 change detected
+2026-06-24 14:39:54,333 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 17:34:28,457 [watchfiles.main] INFO - 1 change detected
+2026-06-24 17:34:30,736 [watchfiles.main] INFO - 4 changes detected
+2026-06-24 17:34:31,172 [watchfiles.main] INFO - 1 change detected
+2026-06-24 17:34:31,962 [watchfiles.main] INFO - 1 change detected
+2026-06-24 17:34:34,098 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 17:34:34,673 [watchfiles.main] INFO - 1 change detected
+2026-06-24 17:53:08,093 [watchfiles.main] INFO - 1 change detected
+2026-06-24 17:53:10,151 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 17:53:10,587 [watchfiles.main] INFO - 1 change detected
+2026-06-24 17:53:11,097 [watchfiles.main] INFO - 1 change detected
+2026-06-24 17:53:13,208 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 17:53:13,591 [watchfiles.main] INFO - 1 change detected
+2026-06-24 17:58:53,446 [watchfiles.main] INFO - 1 change detected
+2026-06-24 17:58:55,674 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 17:58:56,104 [watchfiles.main] INFO - 2 changes detected
+2026-06-24 17:58:58,083 [watchfiles.main] INFO - 4 changes detected
+2026-06-24 18:03:26,828 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:03:28,988 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 18:03:29,416 [watchfiles.main] INFO - 2 changes detected
+2026-06-24 18:03:31,638 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 18:03:32,019 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:07:08,981 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:07:11,180 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 18:07:11,568 [watchfiles.main] INFO - 2 changes detected
+2026-06-24 18:07:13,693 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:07:14,070 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 18:12:10,546 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:12:12,345 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 18:12:12,718 [watchfiles.main] INFO - 2 changes detected
+2026-06-24 18:12:14,591 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 18:12:14,971 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:13:23,775 [apscheduler.executors.default] INFO - Running job "_run_due_audits (trigger: interval[6:00:00], next run at: 2026-06-25 00:13:23 WAT)" (scheduled at 2026-06-24 18:13:23.740957+01:00)
+2026-06-24 18:13:26,182 [httpx] INFO - HTTP Request: GET https://znywqauheovonqltvjhy.supabase.co/rest/v1/scheduled_audits?select=%2A&enabled=eq.True&next_run_at=lte.2026-06-24T17%3A13%3A23.781571%2B00%3A00 "HTTP/2 200 OK"
+2026-06-24 18:13:26,188 [apscheduler.executors.default] INFO - Job "_run_due_audits (trigger: interval[6:00:00], next run at: 2026-06-25 00:13:23 WAT)" executed successfully
+2026-06-24 18:21:13,304 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:21:15,955 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 18:21:16,397 [watchfiles.main] INFO - 2 changes detected
+2026-06-24 18:21:18,682 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 18:21:19,047 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:24:16,366 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:24:18,511 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 18:24:18,897 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:24:19,253 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:24:20,946 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 18:24:21,350 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:24:21,784 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:24:24,034 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 18:24:24,399 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:27:18,873 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:27:20,808 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 18:27:21,196 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:27:21,557 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:27:23,552 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 18:27:23,908 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:27:24,474 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:27:26,410 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 18:27:26,793 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:30:21,375 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:30:23,349 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 18:30:23,705 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:30:24,063 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:30:25,935 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 18:30:26,296 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:30:26,873 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:30:28,772 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 18:30:29,146 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:33:23,708 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:33:26,138 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 18:33:26,519 [watchfiles.main] INFO - 2 changes detected
+2026-06-24 18:33:28,675 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 18:33:29,042 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:33:29,404 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:33:31,320 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 18:33:31,698 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:36:26,507 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:36:28,459 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 18:36:28,864 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:36:29,224 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:36:30,814 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 18:36:31,203 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:36:31,768 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:36:33,493 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 18:36:33,879 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:50:56,571 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:50:58,759 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 18:50:59,184 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:51:00,070 [watchfiles.main] INFO - 1 change detected
+2026-06-24 18:51:02,195 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 18:51:02,566 [watchfiles.main] INFO - 1 change detected
+2026-06-24 19:35:33,901 [watchfiles.main] INFO - 1 change detected
+2026-06-24 19:35:36,189 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 19:35:36,616 [watchfiles.main] INFO - 2 changes detected
+2026-06-24 19:35:38,576 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 19:35:38,969 [watchfiles.main] INFO - 1 change detected
+2026-06-24 19:36:13,584 [watchfiles.main] INFO - 1 change detected
+2026-06-24 19:36:15,538 [watchfiles.main] INFO - 4 changes detected
+2026-06-24 19:39:15,910 [watchfiles.main] INFO - 1 change detected
+2026-06-24 19:39:17,689 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 19:39:18,058 [watchfiles.main] INFO - 1 change detected
+2026-06-24 19:42:18,139 [watchfiles.main] INFO - 1 change detected
+2026-06-24 19:42:31,619 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 19:42:31,977 [watchfiles.main] INFO - 1 change detected
+2026-06-24 19:45:31,966 [watchfiles.main] INFO - 1 change detected
+2026-06-24 19:45:34,159 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 19:45:34,535 [watchfiles.main] INFO - 1 change detected
+2026-06-24 19:48:34,481 [watchfiles.main] INFO - 1 change detected
+2026-06-24 19:48:37,316 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 19:48:37,683 [watchfiles.main] INFO - 1 change detected
+2026-06-24 19:51:37,711 [watchfiles.main] INFO - 1 change detected
+2026-06-24 19:51:43,166 [watchfiles.main] INFO - 4 changes detected
+2026-06-24 19:54:43,354 [watchfiles.main] INFO - 1 change detected
+2026-06-24 19:54:46,785 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 19:54:47,155 [watchfiles.main] INFO - 1 change detected
+2026-06-24 19:57:47,090 [watchfiles.main] INFO - 1 change detected
+2026-06-24 19:57:53,696 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 19:57:54,055 [watchfiles.main] INFO - 1 change detected
+2026-06-24 20:01:53,255 [watchfiles.main] INFO - 1 change detected
+2026-06-24 20:01:57,475 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 20:01:57,830 [watchfiles.main] INFO - 1 change detected
+2026-06-24 20:12:33,856 [watchfiles.main] INFO - 1 change detected
+2026-06-24 20:12:57,799 [watchfiles.main] INFO - 4 changes detected
+2026-06-24 20:45:54,189 [watchfiles.main] INFO - 1 change detected
+2026-06-24 20:46:08,107 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 20:46:08,472 [watchfiles.main] INFO - 1 change detected
+2026-06-24 21:04:27,929 [watchfiles.main] INFO - 1 change detected
+2026-06-24 21:04:42,655 [watchfiles.main] INFO - 3 changes detected
+2026-06-24 21:04:43,118 [watchfiles.main] INFO - 1 change detected

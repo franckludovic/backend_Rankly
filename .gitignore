@@ -32,11 +32,13 @@ models/*.onnx
 *.tflite
 *.bin
 
-# Large data files
+# Large data files (transferred to the server out-of-band, never via git)
 data/cc_graph.db
 data/cc_graph.parquet
 data/*.db
 data/*.parquet
+data/*.duckdb
+data/*.duckdb.wal
 
 # Server logs
 server.log

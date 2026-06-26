@@ -15,7 +15,7 @@ router = APIRouter(prefix="/api/billing", tags=["Billing"])
 
 
 class CheckoutRequest(BaseModel):
-    plan:  str   # "pro" | "agency" | "business"
+    plan:  str   # "pro" | "agency" | "business" | "dev_addon"
     email: str   # user's email- already in auth state on the frontend
 
 
@@ -50,11 +50,12 @@ async def get_subscription(user_id: str = Depends(get_current_user)):
     """Return the current user's plan and subscription status."""
     sub = sub_repo.get_subscription(user_id)
     if not sub:
-        return {"plan": "free", "status": "active", "current_period_end": None}
+        return {"plan": "free", "status": "active", "current_period_end": None, "dev_addon": False}
     return {
         "plan":               sub.get("plan", "free"),
         "status":             sub.get("status", "active"),
         "current_period_end": sub.get("current_period_end"),
+        "dev_addon":          bool(sub.get("dev_addon", False)),
     }
 
 

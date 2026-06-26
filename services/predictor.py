@@ -208,6 +208,18 @@ def predict(features: dict, external_signals: dict | None = None) -> dict:
     # Merge external signals and update derived features
     features = _enrich_with_external(features, external_signals)
 
+    # Debug: log the full feature vector sent to both models (enable with LOG_LEVEL=DEBUG)
+    logger.debug(
+        "CLF feature vector (%d features): %s",
+        len(registry.clf_features),
+        {k: features.get(k, 0) for k in registry.clf_features},
+    )
+    logger.debug(
+        "REG feature vector (%d features): %s",
+        len(registry.reg_features),
+        {k: features.get(k, 0) for k in registry.reg_features},
+    )
+
     lighthouse_available = external_signals.get("lighthouse_available", False)
 
     if not lighthouse_available:

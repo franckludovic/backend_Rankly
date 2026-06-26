@@ -91,7 +91,7 @@ class BulkJob:
                     data    = await run_full_analysis(url, self.keyword)
                     pred    = data.get("prediction", {})
                     on_page = data.get("on_page", {})
-                    qual    = (pred.get("classification") or {}).get("quality", "LOW")
+                    qual    = (pred.get("classification") or {}).get("quality", "LOW").upper()
                     base    = {"HIGH": 85, "MEDIUM": 60}.get(qual, 35)
                     tech    = (on_page.get("technical_score") or 0) * 5
                     score   = min(100, base + tech)

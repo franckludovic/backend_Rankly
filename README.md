@@ -1,4 +1,17 @@
+---
+title: Rankly API
+emoji: 🚀
+colorFrom: indigo
+colorTo: green
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # SEO Suggestion Engine- Backend API
+
+> Deployed as a Hugging Face Docker Space. Listens on port **7860** (see `Dockerfile`).
+> Secrets are set in **Settings → Variables and secrets**, never committed.
 
 ## Structure
 ```

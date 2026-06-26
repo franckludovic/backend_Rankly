@@ -1,0 +1,34 @@
+# Keep the image small — exclude everything not needed at runtime.
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# Virtualenvs (never ship these)
+venv/
+.venv/
+env/
+ENV/
+
+# Secrets — set these in HF Spaces "Settings → Secrets" instead
+.env
+.env.*
+
+# The 3.5GB archive parquet is NOT needed at runtime (only cc_lookup.duckdb is)
+data/cc_graph.parquet
+data/*.parquet
+data/build_cc_lookup.log
+data/serp_cache.db
+
+# Logs / scratch
+*.log
+server.log
+
+# Local tooling / docs
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+scripts/seed_test_users.py
